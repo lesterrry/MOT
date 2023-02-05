@@ -8,6 +8,7 @@
 p, h1, h2, h3, h4, h5, h6 {
 	font-family: 'JetBrains Mono';
 	line-height: 1.4;
+	text-transform: uppercase;
 }
 
 html, body {
@@ -131,6 +132,10 @@ body {
 
 .menu a:hover {
 	color: gray;
+}
+
+.logo-link {
+	pointer-events: none;
 }
 
 .logo {
@@ -267,8 +272,19 @@ body {
 	}
 }
 
-.content .quest-progress img {
+.spinner {
 	animation: spin 3s linear infinite;
+	height: 24px;
+	width: 24px;
+}
+
+.spinner#initial {
+	position: absolute;
+	margin: auto auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 
 .content .quest-progress h3 {
@@ -286,6 +302,19 @@ body {
 	font-weight: 400;
 	color: darkgray;
 	margin-top: 0;
+}
+
+.term {
+	position: absolute;
+	margin: auto auto;
+	bottom: 40px;
+	left: 40px;
+	right: 40px;
+	color: white;
+	font-size: 16px;
+	white-space: pre;
+	text-align: left;
+	top: 40px;
 }
 
 canvas {
