@@ -38,7 +38,7 @@ body {
 }
 
 .frame-part {
-	z-index: 2;
+	z-index: 3;
 	background-color: black;
 	position: absolute;
 }
@@ -67,7 +67,7 @@ body {
 
 .frame-part#d {
 	bottom: 0;
-	height: 60px;
+	height: 100%;
 }
 
 .frame-corner {
@@ -104,11 +104,10 @@ body {
 	justify-content: space-between;
 	position: absolute;
 	height: 16px;
-	margin: auto auto;
+	margin: 0 auto;
 	left: 40px;
 	right: 40px;
-	top: 0;
-	bottom: 0;
+	bottom: -20px;
 }
 
 .menu .items {
@@ -147,7 +146,7 @@ body {
 }
 
 .overlay {
-	z-index: 5;
+	z-index: 6;
 	position: absolute;
 	width: 100%;
 	height: 100%;

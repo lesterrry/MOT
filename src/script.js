@@ -1,52 +1,18 @@
 import './style.css'
+import gsap from 'gsap'
+import * as LOTTIE from 'lottie-web'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
-import * as LOTTIE from 'lottie-web'
 
-/**
- * Base
- */
-// Canvas
-const canvas = document.querySelector('canvas.webgl')
-const cursorSub = document.querySelector('div.cursor-sub')
-const logo = document.querySelector('div.logo')
-
-const logoAnimation = LOTTIE.loadAnimation({
-	container: logo, // the dom element that will contain the animation
-	renderer: 'svg',
-	loop: false,
-	autoplay: false,
-	path: '/lottie/logo.json' // the path to the animation json
-});
-
-// Scene
-const scene = new THREE.Scene()
-
-/**
- * Sizes
- */
+//
+// Globals
+//
 const sizes = {
 	width: window.innerWidth,
 	height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
-{
-	// Update sizes
-	sizes.width = window.innerWidth
-	sizes.height = window.innerHeight
-
-	// Update camera
-	camera.aspect = sizes.width / sizes.height
-	camera.updateProjectionMatrix()
-
-	// Update renderer
-	renderer.setSize(sizes.width, sizes.height)
-	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-})
-
-// Cursor
 let cursor = {
 	x: {
 		center: 0,
@@ -60,6 +26,31 @@ let cursor = {
 	}
 }
 
+//
+// Selectors
+//
+const canvas = document.querySelector('canvas.webgl')
+const cursorSub = document.querySelector('div.cursor-sub')
+const footer = document.querySelector('.frame-part#d')
+const menu = document.querySelector('div.menu')
+const logo = document.querySelector('div.logo')
+const relaunchButton = document.querySelector('a#relaunch')
+const exhibitsButton = document.querySelector('a#to-exhibits')
+const artefactsButton = document.querySelector('a#to-artefacts')
+const aboutButton = document.querySelector('a#to-about')
+
+//
+// Events
+//
+window.addEventListener('resize', () =>
+{
+	sizes.width = window.innerWidth
+	sizes.height = window.innerHeight
+	camera.aspect = sizes.width / sizes.height
+	camera.updateProjectionMatrix()
+	renderer.setSize(sizes.width, sizes.height)
+	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
 window.addEventListener('mousemove', (event) =>
 {
 	cursor.x.corner = event.clientX - 11
@@ -72,21 +63,29 @@ window.addEventListener('mousemove', (event) =>
 	}
 })
 
-/**
- * Camera
- */
-// Base camera
+//
+// Lotties
+//
+const logoAnimation = LOTTIE.loadAnimation({
+	container: logo,
+	renderer: 'svg',
+	loop: false,
+	autoplay: false,
+	path: '/lottie/logo.json'
+});
+
+logoAnimation.addEventListener('DOMLoaded', function() {
+	logoAnimation.goToAndStop(0, true)
+	logoAnimation.playSegments([0, 9], true)
+})
+//
+// Three
+//
+const scene = new THREE.Scene()
+
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.set(0, 1.2, 1.2)
 scene.add(camera)
-
-// Controls
-// const controls = new OrbitControls(camera, canvas)
-// controls.enableDamping = true
-
-/**
- * Object
- */
 
 scene.background = new THREE.Color( 0xdbd7d2 );
 
@@ -128,9 +127,6 @@ floor.rotation.x = - (Math.PI * 0.5)
 floor.position.y = 0
 scene.add(floor)
 
-/**
- * Renderer
- */
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 	antialias: true
@@ -140,9 +136,9 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-/**
- * Animate
- */
+//
+// Main flow
+//
 const clock = new THREE.Clock()
 let TPF = 0
 let last = 0
@@ -171,16 +167,18 @@ const tick = () =>
 	s['msTransform'] = t;
 
 	if (logo.matches(":hover") != logoHover) {
-		if (logoHover) {  // Exit
-			logoAnimation.setDirection(-1)
-			logoAnimation.play()
-		} else {  // Enter
-			logoAnimation.setDirection(1)
-			logoAnimation.goToAndPlay(0, true)
+		if (logoHover) {
+			// logoAnimation.setDirection(-1)
+			logoAnimation.playSegments([21, 9], true)
+		} else {
+			// logoAnimation.setDirection(1)
+			logoAnimation.playSegments([9, 21], true)
 		}
 		logoHover = !logoHover
 	}
 	window.requestAnimationFrame(tick)
 }
-
 tick()
+
+gsap.to(footer, {height: 60, duration: 1, delay: 2})
+gsap.to(menu, {bottom: 22, duration: 0.5, delay: 3})
