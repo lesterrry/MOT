@@ -6,6 +6,8 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 
+import WatchPNG from '../static/img/watch.png'
+
 //
 // Exhibits
 //
@@ -19,9 +21,10 @@ class Exhibit {
 	}
 }
 class Poi {
-	constructor(title, description, x, y) {
+	constructor(title, description, image, x, y) {
 		this.title = title
 		this.description = description
+		this.image = image
 		this.x = x
 		this.y = y
 	}
@@ -31,21 +34,32 @@ class Poi {
 // Globals
 //
 const EXHIBITS = [
-	new Exhibit(
+	new Exhibit (
 		'2412', 
 		'ОЖИДАТЕЛЬ', 
 		'“ОЖИДАТЕЛЬ” ПРЕДСТАВЛЯЕТ СОБОЙ РЕПРОДУКЦИЮ ЗНАМЕНИТОЙ СКУЛЬПТУРЫ РОДЕНА “МЫСЛИТЕЛЬ”, СОЗДАННУЮ ОКОЛО СТА ЛЕТ НАЗАД. ЭТО ОБРАЗ ЧЕЛОВЕКА, УТОМЛЕННОГО ОЖИДАНИЕМ — ТИПИЧНОЕ ЗРЕЛИЩЕ ДЛЯ XXI ВЕКА.', 
 		'/3d/Thinker_v9.fbx', 
 		[
-			new Poi(
+			new Poi (
 				'НАРУЧНЫЕ ЧАСЫ BRIETLING', 
-				'В XXI ВЕКЕ ЧАСЫ ЧАСТО ЯВЛЯЛИСЬ ПРЕДМЕТАМИ РОСКОШИ, ДЛЯ ТОГО, ЧТОБЫ СЛЕДИТЬ ЗА ВРЕМЕНЕМ, СОСТОЯТЕЛЬНЫЕ ЛЮДИ БЫЛИ ГОТОВЫ ПЛАТИТЬ БОЛЬШИЕ ДЕНЬГИ',
+				'В XXI ВЕКЕ ЧАСЫ ЧАСТО ЯВЛЯЛИСЬ ПРЕДМЕТАМИ РОСКОШИ: ДЛЯ ТОГО, ЧТОБЫ СЛЕДИТЬ ЗА ВРЕМЕНЕМ, СОСТОЯТЕЛЬНЫЕ ЛЮДИ БЫЛИ ГОТОВЫ ПЛАТИТЬ БОЛЬШИЕ ДЕНЬГИ',
+				'watch',
 				0.026,
-				-0.116
-			) 
+				-0.116,
+			),
+			new Poi (
+				'УТОМЛЕННЫЙ ВЗГЛЯД',
+				'ГЛАЗА ЧЕЛОВЕКА, ПРОВЕДШЕГО В ОЖИДАНИИ НЕ ОДИН ЧАС. НАШИМ СОВРЕМЕННИКАМ ТРУДНО ПРЕДСТАВИТЬ ЭТО ЧУВСТВО, НО ЛЕТОПИСИ ОПИСЫВАЮТ ЕГО НЕ ИНАЧЕ КАК НЕВЫНОСИМОЕ',
+				null,
+				0.008,
+				0.209
+			)
 		]
 	)
 ]
+const imageMap = {
+	'watch': WatchPNG
+}
 const sizes = {
 	width: window.innerWidth,
 	height: window.innerHeight
@@ -65,7 +79,8 @@ let cursor = {
 }
 const client = window.navigator.userAgent
 const offset = 0.02
-const currentExhibit = EXHIBITS[0]
+let currentExhibit = EXHIBITS[0]
+let distract = true
 
 // 
 // Cookie handling
@@ -128,6 +143,11 @@ const aboutButton = document.querySelector('a#to-about')
 const initialSpinner = document.querySelector('.spinner#initial')
 const termText = document.querySelector('p.term')
 const exLink = document.querySelector('a.logo-link')
+const overlayTitle = document.querySelector('.overlay.partial h1')
+const overlayCloseButton = document.querySelector('.overlay.partial h2')
+const overlayDescription = document.querySelector('.overlay.partial p')
+const overlay = document.querySelector('.overlay.partial')
+const overlayImage = document.querySelector('.overlay.partial img')
 const cornerTextLU = document.querySelector('.content h3#lu')
 const cornerTextRU = document.querySelector('.content h3#ru')
 const cornerTextLD = document.querySelector('.content h3#ld')
@@ -137,7 +157,12 @@ const exhibitDescription = document.querySelector('.description p')
 const exhibitProgressTitle = document.querySelector('.content .quest-progress h2')
 const exhibitProgressSubtitleA = document.querySelector('.content .quest-progress h3#a')
 const exhibitProgressSubtitleB = document.querySelector('.content .quest-progress h3#b')
-const exhibitProgressSubtitleC= document.querySelector('.content .quest-progress h3#c')
+const exhibitProgressSubtitleC = document.querySelector('.content .quest-progress h3#c')
+const exhibitProgressSubtitleMap = [
+	exhibitProgressSubtitleA,
+	exhibitProgressSubtitleB,
+	exhibitProgressSubtitleC
+]
 const exhibitProgressDescriptionA = document.querySelector('.content .quest-progress p#a')
 const exhibitProgressDescriptionB = document.querySelector('.content .quest-progress p#b')
 const exhibitProgressDescriptionC = document.querySelector('.content .quest-progress p#c')
@@ -162,6 +187,7 @@ window.addEventListener('mousemove', (event) => {
 		cursor.x.cornerCurrent = event.clientX
 		cursor.y.cornerCurrent = event.clientY
 	}
+	let any = false
 	for (var i = 0; i < currentExhibit.pois.length; i++) {
 		if (
 			(cursor.x.center >= currentExhibit.pois[i].x - offset) && (cursor.x.center <= currentExhibit.pois[i].x + offset) &&
@@ -171,19 +197,20 @@ window.addEventListener('mousemove', (event) => {
 				gsap.to(cursorSub, { borderWidth: 2, backgroundColor: "rgba(0,0,0,0)", duration: 0.25 })
 				cursor.focus = i
 			}
-		} else {
-			if (cursor.focus !== false) {
-				gsap.to(cursorSub, { borderWidth: 10, backgroundColor: "black", duration: 0.25 })
-				cursor.focus = false
-			}
+			any = true
+			break
 		}
+	}
+	if (!any && cursor.focus !== false) {
+		gsap.to(cursorSub, { borderWidth: 10, backgroundColor: "black", duration: 0.25 })
+		cursor.focus = false
 	}
 	// console.log(cursor.x.center, cursor.y.center)
 })
 window.addEventListener('click', () => {
-	if (cursor.focus == 0) {
-		exhibitProgressSubtitleA.innerText = currentExhibit.pois[0].title
-		exhibitProgressDescriptionA.innerText = currentExhibit.pois[0].description
+	if (cursor.focus !== false && !distract) {
+		showOverlay(currentExhibit.pois[cursor.focus])
+		exhibitProgressSubtitleMap[cursor.focus].innerText = currentExhibit.pois[cursor.focus].title
 	}
 
 })
@@ -191,11 +218,15 @@ window.addEventListener('load', () => {
 	if (!deserializeCookies()) {
 		serializeCookies()
 	}
+	gsap.to(initialSpinner, { opacity: 0, duration: 0.25})
 	setTimeout(() => { flow(cookies.progress != '0') }, 1000)  // Delay for load-safety
 })
 relaunchButton.addEventListener('click', () => {
 	cookies.progress = '0'
 	window.location.reload();
+})
+overlayCloseButton.addEventListener('click', () => {
+	hideOverlay()
 })
 
 //
@@ -208,6 +239,44 @@ const logoAnimation = LOTTIE.loadAnimation({
 	autoplay: false,
 	path: '/lottie/logo.json'
 })
+
+//
+// Service functions
+//
+const preloadImage = (url, callback) => {
+    let img = new Image()
+    img.src = url
+    img.onload = callback
+}
+
+//
+// Overlay
+//
+const showOverlay = (poi) => {
+	const fill = () => {
+		initialSpinner.style['opacity'] = '0'
+		overlayTitle.innerText = poi.title
+		overlayDescription.innerText = poi.description
+		overlay.style['display'] = 'initial'
+	}
+	distract = true
+	initialSpinner.style['opacity'] = '1'
+	if (poi.image) {
+		let image = imageMap[poi.image]
+		preloadImage(image, () => {
+			overlayImage.src = image
+			overlayImage.style['display'] = 'block'
+			fill()
+		})
+	} else {
+		fill()
+	}
+}
+const hideOverlay = () => {
+	overlay.style['display'] = 'none'
+	overlayImage.style['display'] = 'none'
+	distract = false
+}
 
 //
 // Three & Scenes
@@ -322,7 +391,6 @@ const threeTick = () => {
 // Main flow
 //
 const flow = (rewind=false) => {
-	initialSpinner.style['display'] = 'none'
 	if (rewind) {
 		step3()
 	} else {
@@ -365,10 +433,13 @@ const step2 = () => {
 }
 const step3 = () => {
 	termText.innerHTML = ''
-	loadScene(EXHIBITS[0])
-	threeTick()
 	logoAnimation.playSegments([0, 9], true)
-	exLink.style['pointer-events'] = 'initial'
-	gsap.to(footer, { height: 60, duration: 1, delay: 1 })
-	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 1.75 })
+	setTimeout(() => {
+		loadScene(EXHIBITS[0])
+		threeTick()
+		exLink.style['pointer-events'] = 'initial'
+		gsap.to(footer, { height: 60, duration: 1, delay: 0.5 })
+		gsap.to(menu, { bottom: 22, duration: 0.5, delay: 1.25 })
+		distract = false
+	}, 500)
 }
