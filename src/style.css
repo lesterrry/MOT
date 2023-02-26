@@ -128,6 +128,7 @@ body {
 	font-family: 'JetBrains Mono';
 	text-decoration: none;
 	font-size: 13px;
+	cursor: pointer;
 }
 
 .menu a:hover {
@@ -328,6 +329,7 @@ canvas {
 	background-color: black;
 	/*-webkit-backdrop-filter: invert(100%);
   	backdrop-filter: invert(100%);*/
+  	border: 10px black solid;
 	border-radius: 50%;
 	width: 22px;
 	height: 22px;

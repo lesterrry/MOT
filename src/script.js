@@ -7,13 +7,50 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 
 //
+// Exhibits
+//
+class Exhibit {
+	constructor(index, title, description, model, pois) {
+		this.index = index
+		this.title = title
+		this.description = description
+		this.model = model
+		this.pois = pois
+	}
+}
+class Poi {
+	constructor(title, description, x, y) {
+		this.title = title
+		this.description = description
+		this.x = x
+		this.y = y
+	}
+}
+
+//
 // Globals
 //
+const EXHIBITS = [
+	new Exhibit(
+		'2412', 
+		'ОЖИДАТЕЛЬ', 
+		'“ОЖИДАТЕЛЬ” ПРЕДСТАВЛЯЕТ СОБОЙ РЕПРОДУКЦИЮ ЗНАМЕНИТОЙ СКУЛЬПТУРЫ РОДЕНА “МЫСЛИТЕЛЬ”, СОЗДАННУЮ ОКОЛО СТА ЛЕТ НАЗАД. ЭТО ОБРАЗ ЧЕЛОВЕКА, УТОМЛЕННОГО ОЖИДАНИЕМ — ТИПИЧНОЕ ЗРЕЛИЩЕ ДЛЯ XXI ВЕКА.', 
+		'/3d/Thinker_v9.fbx', 
+		[
+			new Poi(
+				'НАРУЧНЫЕ ЧАСЫ BRIETLING', 
+				'В XXI ВЕКЕ ЧАСЫ ЧАСТО ЯВЛЯЛИСЬ ПРЕДМЕТАМИ РОСКОШИ, ДЛЯ ТОГО, ЧТОБЫ СЛЕДИТЬ ЗА ВРЕМЕНЕМ, СОСТОЯТЕЛЬНЫЕ ЛЮДИ БЫЛИ ГОТОВЫ ПЛАТИТЬ БОЛЬШИЕ ДЕНЬГИ',
+				0.026,
+				-0.116
+			) 
+		]
+	)
+]
 const sizes = {
 	width: window.innerWidth,
 	height: window.innerHeight
 }
-const cursor = {
+let cursor = {
 	x: {
 		center: 0,
 		corner: 0,
@@ -23,10 +60,58 @@ const cursor = {
 		center: 0,
 		corner: 0,
 		cornerCurrent: 0
-	}
+	},
+	focus: false
 }
 const client = window.navigator.userAgent
-const sessionID = Math.random()
+const offset = 0.02
+const currentExhibit = EXHIBITS[0]
+
+// 
+// Cookie handling
+//
+let cookies = {
+	_progress: '0',
+	_sessionID: String(Math.random()),
+	get progress() { return this._progress },
+	set progress(value) { this._progress = value; serializeCookies() },
+	get sessionID() { return this._sessionID },
+	set sessionID(value) { this._sessionID = value; serializeCookies() },
+}
+const createCookie = (name, value) => {
+	document.cookie = name + '=' + value + '; expires=;' + ' path=/';
+}
+const deleteCookie = (name) => {
+	document.cookie = name + '=;' + '; expires=;' + ' path=/';
+}
+const getCookie = (c_name) => {
+	if (document.cookie.length > 0) {
+		let c_start = document.cookie.indexOf(c_name + '=');
+		if (c_start != -1) {
+			c_start = c_start + c_name.length + 1;
+			let c_end = document.cookie.indexOf(';', c_start);
+			if (c_end == -1) {
+				c_end = document.cookie.length;
+			}
+			return unescape(document.cookie.substring(c_start, c_end));
+		}
+	}
+	return null;
+}
+const deserializeCookies = () => {
+	let c = getCookie('session')
+	if (!c) return false
+	Object.assign(cookies, JSON.parse(c))
+	return true
+}
+const serializeCookies = () => {
+	let replacer = (key, value) => {
+		if (key[0] == '_' || typeof value === 'object') return value;
+		else return undefined;
+	}
+	let s = JSON.stringify(cookies, replacer)
+	createCookie('session', s)
+}
 
 //
 // Selectors
@@ -43,6 +128,19 @@ const aboutButton = document.querySelector('a#to-about')
 const initialSpinner = document.querySelector('.spinner#initial')
 const termText = document.querySelector('p.term')
 const exLink = document.querySelector('a.logo-link')
+const cornerTextLU = document.querySelector('.content h3#lu')
+const cornerTextRU = document.querySelector('.content h3#ru')
+const cornerTextLD = document.querySelector('.content h3#ld')
+const cornerTextRD = document.querySelector('.content h3#rd')
+const exhibitTitle = document.querySelector('.content h1')
+const exhibitDescription = document.querySelector('.description p')
+const exhibitProgressTitle = document.querySelector('.content .quest-progress h2')
+const exhibitProgressSubtitleA = document.querySelector('.content .quest-progress h3#a')
+const exhibitProgressSubtitleB = document.querySelector('.content .quest-progress h3#b')
+const exhibitProgressSubtitleC= document.querySelector('.content .quest-progress h3#c')
+const exhibitProgressDescriptionA = document.querySelector('.content .quest-progress p#a')
+const exhibitProgressDescriptionB = document.querySelector('.content .quest-progress p#b')
+const exhibitProgressDescriptionC = document.querySelector('.content .quest-progress p#c')
 
 //
 // Events
@@ -64,9 +162,40 @@ window.addEventListener('mousemove', (event) => {
 		cursor.x.cornerCurrent = event.clientX
 		cursor.y.cornerCurrent = event.clientY
 	}
+	for (var i = 0; i < currentExhibit.pois.length; i++) {
+		if (
+			(cursor.x.center >= currentExhibit.pois[i].x - offset) && (cursor.x.center <= currentExhibit.pois[i].x + offset) &&
+			(cursor.y.center >= currentExhibit.pois[i].y - offset) && (cursor.y.center <= currentExhibit.pois[i].y + offset)
+		) {
+			if (cursor.focus === false) {
+				gsap.to(cursorSub, { borderWidth: 2, backgroundColor: "rgba(0,0,0,0)", duration: 0.25 })
+				cursor.focus = i
+			}
+		} else {
+			if (cursor.focus !== false) {
+				gsap.to(cursorSub, { borderWidth: 10, backgroundColor: "black", duration: 0.25 })
+				cursor.focus = false
+			}
+		}
+	}
+	// console.log(cursor.x.center, cursor.y.center)
+})
+window.addEventListener('click', () => {
+	if (cursor.focus == 0) {
+		exhibitProgressSubtitleA.innerText = currentExhibit.pois[0].title
+		exhibitProgressDescriptionA.innerText = currentExhibit.pois[0].description
+	}
+
 })
 window.addEventListener('load', () => {
-	flow()
+	if (!deserializeCookies()) {
+		serializeCookies()
+	}
+	setTimeout(() => { flow(cookies.progress != '0') }, 1000)  // Delay for load-safety
+})
+relaunchButton.addEventListener('click', () => {
+	cookies.progress = '0'
+	window.location.reload();
 })
 
 //
@@ -81,54 +210,10 @@ const logoAnimation = LOTTIE.loadAnimation({
 })
 
 //
-// Three
+// Three & Scenes
 //
-const scene = new THREE.Scene()
-
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(0, 1.2, 1.2)
-scene.add(camera)
-
-scene.background = new THREE.Color(0xdbd7d2)
-
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444)
-hemiLight.position.set(0, 200, 0)
-scene.add(hemiLight)
-
-const spotLight = new THREE.SpotLight(0xffffff, 0.4)
-spotLight.angle = Math.PI / 5
-spotLight.penumbra = 0.8
-spotLight.position.set(0, 5, 5)
-spotLight.castShadow = false
-spotLight.shadow.camera.near = 3
-spotLight.shadow.camera.far = 36
-spotLight.shadow.mapSize.width = 2048
-spotLight.shadow.mapSize.height = 2048
-scene.add(spotLight)
-
-const loader = new FBXLoader()
-loader.load('/3d/Thinker_v9.fbx', (object) => {
-	object.rotation.y = 1
-	object.traverse((child) => {
-		if (child.isMesh) {
-			child.castShadow = true
-		}
-	})
-	scene.add(object)
-})
-
-const floor = new THREE.Mesh(
-	new THREE.PlaneGeometry(1000, 1000),
-	new THREE.MeshPhongMaterial({
-		color: 0xdbd7d2,
-		depthWrite: false
-	})
-)
-floor.receiveShadow = true
-floor.rotation.x = - (Math.PI * 0.5)
-floor.position.y = 0
-scene.add(floor)
-
+const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 	antialias: true
@@ -137,6 +222,53 @@ renderer.shadowMap.enabled = false
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+const loadScene = (exhibit) => {
+	exhibitTitle.innerText = exhibit.title
+	exhibitDescription.innerText = exhibit.description
+	camera.position.set(0, 1.2, 1.2)
+	scene.add(camera)
+
+	scene.background = new THREE.Color(0xdbd7d2)
+
+	const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444)
+	hemiLight.position.set(0, 200, 0)
+	scene.add(hemiLight)
+
+	const spotLight = new THREE.SpotLight(0xffffff, 0.4)
+	spotLight.angle = Math.PI / 5
+	spotLight.penumbra = 0.8
+	spotLight.position.set(0, 5, 5)
+	spotLight.castShadow = false
+	spotLight.shadow.camera.near = 3
+	spotLight.shadow.camera.far = 36
+	spotLight.shadow.mapSize.width = 2048
+	spotLight.shadow.mapSize.height = 2048
+	scene.add(spotLight)
+
+	const loader = new FBXLoader()
+	loader.load(exhibit.model, (object) => {
+		object.rotation.y = 1
+		object.traverse((child) => {
+			if (child.isMesh) {
+				child.castShadow = true
+			}
+		})
+		scene.add(object)
+	})
+
+	const floor = new THREE.Mesh(
+		new THREE.PlaneGeometry(1000, 1000),
+		new THREE.MeshPhongMaterial({
+			color: 0xdbd7d2,
+			depthWrite: false
+		})
+	)
+	floor.receiveShadow = true
+	floor.rotation.x = - (Math.PI * 0.5)
+	floor.position.y = 0
+	scene.add(floor)
+}
 
 //
 // Main loop
@@ -189,20 +321,24 @@ const threeTick = () => {
 //
 // Main flow
 //
-const flow = () => {
+const flow = (rewind=false) => {
 	initialSpinner.style['display'] = 'none'
-	step2()
+	if (rewind) {
+		step3()
+	} else {
+		step1()
+	}
 }
 const step1 = () => {
 	let strings = [
-		'[ ~ ] initializing...^1000\n`[ * ] success`^500\n[ ~ ] configuring client...^1000\n`[ ! ] error >>>`\n`    ]> hardware too old`\n`    ]> will use bridge`^1000 ',
-		'[ ~ ] preparing bridge...^1000\n`[ * ] success {{{`\n`    ]{ protocol: ( XXI century internet <=> uninet© )`\n`    ]{ client: ( ' + client + ' )`\n`    ]{ session: ( ' + sessionID + '` )\n[\n[\n[\n[\n[ ~ ] launching...^1000\n`[ * ] success`^250'
+		'[ ~ ] initializing...^1000\n`[ * ] success`^500\n[ ~ ] configuring client...^1000\n`[ ! ] error >>>`\n`    ]> hardware too old`\n`    ]> will use bridge`\n`    ]> `^800',
+		'',
+		'[ ~ ] preparing bridge...^1000\n`[ * ] success {{{`\n`    ]{ protocol: ( XXI century internet <=> uninet© )`\n`    ]{ client: ( ' + client + ' )`\n`    ]{ session: ( ' + cookies.sessionID + '` )\n[\n[\n[\n[\n[ ~ ] launching...^1000\n`[ * ] success`^250'
 	]
 	let typed = new Typed(termText, {
 		strings,
 		typeSpeed: 10,
 		startDelay: 1000,
-		backSpeed: 0,
 		onComplete: step2
 	});
 }
@@ -225,12 +361,14 @@ const step2 = () => {
 		backSpeed: 2,
 		onComplete: () => { setTimeout(step3, 1000) }
 	});
+	cookies.progress = '1'
 }
 const step3 = () => {
 	termText.innerHTML = ''
+	loadScene(EXHIBITS[0])
 	threeTick()
 	logoAnimation.playSegments([0, 9], true)
 	exLink.style['pointer-events'] = 'initial'
-	gsap.to(footer, {height: 60, duration: 1, delay: 2})
-	gsap.to(menu, {bottom: 22, duration: 0.5, delay: 3})
+	gsap.to(footer, { height: 60, duration: 1, delay: 1 })
+	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 1.75 })
 }

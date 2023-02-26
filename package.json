@@ -1,5 +1,5 @@
 {
-  "repository": "#",
+  "repository": "https://github.com/lesterrry/mot",
   "license": "UNLICENSED",
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",
