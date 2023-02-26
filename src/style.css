@@ -382,7 +382,6 @@ canvas {
 }
 
 .cursor-sub {
-	display: none;
 	z-index: 1;
 	position: absolute;
 	background-color: black;
@@ -394,6 +393,3 @@ canvas {
 	height: 22px;
 }
 
-body:hover > .cursor-sub {
-	display: initial;
-}
