@@ -12,12 +12,13 @@ import WatchPNG from '../static/img/watch.png'
 // Exhibits
 //
 class Exhibit {
-	constructor(index, title, description, model, pois) {
+	constructor(index, title, description, model, pois, camera) {
 		this.index = index
 		this.title = title
 		this.description = description
 		this.model = model
 		this.pois = pois
+		this.camera = camera
 	}
 }
 class Poi {
@@ -29,6 +30,17 @@ class Poi {
 		this.y = y
 	}
 }
+class Camera {
+	constructor(zPosition, xMultiplier, xAppender, yMultiplier, yAppender, anchor, shadowsEnabled) {
+		this.zPosition = zPosition
+		this.xMultiplier = xMultiplier
+		this.xAppender = xAppender
+		this.yMultiplier = yMultiplier
+		this.yAppender = yAppender
+		this.anchor = anchor
+		this.shadowsEnabled = shadowsEnabled
+	}
+}
 
 //
 // Globals
@@ -36,26 +48,53 @@ class Poi {
 const EXHIBITS = [
 	new Exhibit (
 		'2412', 
-		'ОЖИДАТЕЛЬ', 
-		'“ОЖИДАТЕЛЬ” ПРЕДСТАВЛЯЕТ СОБОЙ РЕПРОДУКЦИЮ ЗНАМЕНИТОЙ СКУЛЬПТУРЫ РОДЕНА “МЫСЛИТЕЛЬ”, СОЗДАННУЮ ОКОЛО СТА ЛЕТ НАЗАД. ЭТО ОБРАЗ ЧЕЛОВЕКА, УТОМЛЕННОГО ОЖИДАНИЕМ — ТИПИЧНОЕ ЗРЕЛИЩЕ ДЛЯ XXI ВЕКА.', 
+		'Автокатастрофа', 
+		'Этот экспонат — один из новых. Он показывает столкновение двух автомобилей — "Аварию". До открытия ускорения времени люди постоянно торопились и нередко погибали в спешке.', 
+		'/3d/Crash_v1.fbx', 
+		[
+			
+		],
+		new Camera (
+			5,
+			2.2,
+			1,
+			3,
+			2.5,
+			[0, 2, -2],
+			true
+		)
+	),
+	new Exhibit (
+		'2412', 
+		'Ожидатель', 
+		'“Ожидатель” представляет собой репродукцию знаменитой скульптуры родена “мыслитель”, созданную около ста лет назад. это образ человека, утомленного ожиданием — типичное зрелище для XXI века.', 
 		'/3d/Thinker_v9.fbx', 
 		[
 			new Poi (
-				'НАРУЧНЫЕ ЧАСЫ BRIETLING', 
-				'В XXI ВЕКЕ ЧАСЫ ЧАСТО ЯВЛЯЛИСЬ ПРЕДМЕТАМИ РОСКОШИ: ДЛЯ ТОГО, ЧТОБЫ СЛЕДИТЬ ЗА ВРЕМЕНЕМ, СОСТОЯТЕЛЬНЫЕ ЛЮДИ БЫЛИ ГОТОВЫ ПЛАТИТЬ БОЛЬШИЕ ДЕНЬГИ',
+				'Наручные часы Brietling', 
+				'В XXI веке часы часто являлись предметами роскоши: для того, чтобы следить за временем, состоятельные люди были готовы платить большие деньги',
 				'watch',
 				0.026,
 				-0.116,
 			),
 			new Poi (
-				'УТОМЛЕННЫЙ ВЗГЛЯД',
-				'ГЛАЗА ЧЕЛОВЕКА, ПРОВЕДШЕГО В ОЖИДАНИИ НЕ ОДИН ЧАС. НАШИМ СОВРЕМЕННИКАМ ТРУДНО ПРЕДСТАВИТЬ ЭТО ЧУВСТВО, НО ЛЕТОПИСИ ОПИСЫВАЮТ ЕГО НЕ ИНАЧЕ КАК НЕВЫНОСИМОЕ',
+				'Утомленный взгляд',
+				'Глаза человека, проведшего в ожидании не один час. нашим современникам трудно представить это чувство, но летописи описывают его не иначе как невыносимое',
 				null,
 				0.008,
 				0.209
 			)
-		]
-	)
+		],
+		new Camera (
+			1.2,
+			0.8,
+			0,
+			1,
+			1.5,
+			[0, 2.4, 0],
+			false
+		)
+	),
 ]
 const imageMap = {
 	'watch': WatchPNG
@@ -287,7 +326,7 @@ const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 	antialias: true
 })
-renderer.shadowMap.enabled = false
+renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -295,7 +334,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const loadScene = (exhibit) => {
 	exhibitTitle.innerText = exhibit.title
 	exhibitDescription.innerText = exhibit.description
-	camera.position.set(0, 1.2, 1.2)
+	camera.position.set(0, 0, exhibit.camera.zPosition)
 	scene.add(camera)
 
 	scene.background = new THREE.Color(0xdbd7d2)
@@ -308,7 +347,7 @@ const loadScene = (exhibit) => {
 	spotLight.angle = Math.PI / 5
 	spotLight.penumbra = 0.8
 	spotLight.position.set(0, 5, 5)
-	spotLight.castShadow = false
+	spotLight.castShadow = exhibit.camera.shadowsEnabled
 	spotLight.shadow.camera.near = 3
 	spotLight.shadow.camera.far = 36
 	spotLight.shadow.mapSize.width = 2048
@@ -320,7 +359,8 @@ const loadScene = (exhibit) => {
 		object.rotation.y = 1
 		object.traverse((child) => {
 			if (child.isMesh) {
-				child.castShadow = true
+				child.castShadow = exhibit.camera.shadowsEnabled
+				child.receiveShadow = exhibit.camera.shadowsEnabled
 			}
 		})
 		scene.add(object)
@@ -333,7 +373,7 @@ const loadScene = (exhibit) => {
 			depthWrite: false
 		})
 	)
-	floor.receiveShadow = true
+	floor.receiveShadow = false
 	floor.rotation.x = - (Math.PI * 0.5)
 	floor.position.y = 0
 	scene.add(floor)
@@ -353,9 +393,9 @@ const threeTick = () => {
 	TPF = Math.round((elapsedTime - last) * 100) / 100
 	last = elapsedTime
 
-	camera.position.x = cursor.x.center * 0.8
-	camera.position.y = cursor.y.center + 1.5
-	camera.lookAt(new THREE.Vector3(0, 2.4, 0))
+	camera.position.x = (cursor.x.center * currentExhibit.camera.xMultiplier) + currentExhibit.camera.xAppender
+	camera.position.y = (cursor.y.center * currentExhibit.camera.yMultiplier) + currentExhibit.camera.yAppender
+	camera.lookAt(new THREE.Vector3(...currentExhibit.camera.anchor))
 
 	renderer.render(scene, camera)
 
@@ -435,9 +475,11 @@ const step3 = () => {
 	termText.innerHTML = ''
 	logoAnimation.playSegments([0, 9], true)
 	setTimeout(() => {
-		loadScene(EXHIBITS[0])
+		loadScene(currentExhibit)
 		threeTick()
 		exLink.style['pointer-events'] = 'initial'
+		// TODO:
+		// Wait for cursor movement to suppress initial model movement
 		gsap.to(footer, { height: 60, duration: 1, delay: 0.5 })
 		gsap.to(menu, { bottom: 22, duration: 0.5, delay: 1.25 })
 		distract = false
