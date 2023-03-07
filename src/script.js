@@ -233,6 +233,7 @@ const exhibitProgressSubtitleMap = [
 	exhibitProgressSubtitleB,
 	exhibitProgressSubtitleC
 ]
+// Obsolete
 const exhibitProgressDescriptionA = document.querySelector('.content .quest-progress p#a')
 const exhibitProgressDescriptionB = document.querySelector('.content .quest-progress p#b')
 const exhibitProgressDescriptionC = document.querySelector('.content .quest-progress p#c')
