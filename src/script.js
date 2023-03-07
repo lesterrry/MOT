@@ -6,8 +6,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 
-import WatchPNG from '../static/img/watch.png'
-
 //
 // Exhibits
 //
@@ -22,10 +20,9 @@ class Exhibit {
 	}
 }
 class Poi {
-	constructor(title, description, image, x, y) {
+	constructor(title, description, x, y) {
 		this.title = title
 		this.description = description
-		this.image = image
 		this.x = x
 		this.y = y
 	}
@@ -56,21 +53,18 @@ const EXHIBITS = [
 			new Poi (
 				'Аналоговые кнопки', 
 				'Для того, чтобы пользоваться этим предметом, людям приходилось физически вдавливать выступающие части корпуса — кнопки — внутрь устройства. в 2133 году представить такое трудно.',
-				null,
 				0.027,
 				-0.008,
 			),
 			new Poi (
 				'Погасший дисплей', 
 				'Когда-то здесь отображались шесть цифр — они представляли текущее время в часах, минутах и секундах. Когда был проведен первый успешный опыт, время в тестовой камере удалось замедлить, и секунды стали идти медленнее.',
-				null,
 				0.027,
 				-0.194,
 			),
 			new Poi (
 				'Радиопередатчик', 
 				'Для того, чтобы коммуницировать с устройством из центра управления, ученые приделали к нему радиопередатчик, с помощью которого с точностью до миллисекунды синхронизировалось время.',
-				null,
 				-0.107,
 				-0.244,
 			),
@@ -95,14 +89,12 @@ const EXHIBITS = [
 			new Poi (
 				'Наручные часы Brietling', 
 				'В XXI веке часы часто являлись предметами роскоши: для того, чтобы следить за временем, состоятельные люди были готовы платить большие деньги',
-				'watch',
 				0.026,
 				-0.116,
 			),
 			new Poi (
 				'Утомленный взгляд',
 				'Глаза человека, проведшего в ожидании не один час. нашим современникам трудно представить это чувство, но летописи описывают его не иначе как невыносимое',
-				null,
 				0.008,
 				0.209
 			)
@@ -138,9 +130,6 @@ const EXHIBITS = [
 		)
 	),
 ]
-const imageMap = {
-	'watch': WatchPNG
-}
 const sizes = {
 	width: window.innerWidth,
 	height: window.innerHeight
@@ -322,40 +311,16 @@ const logoAnimation = LOTTIE.loadAnimation({
 })
 
 //
-// Service functions
-//
-const preloadImage = (url, callback) => {
-    let img = new Image()
-    img.src = url
-    img.onload = callback
-}
-
-//
 // Overlay
 //
 const showOverlay = (poi) => {
-	const fill = () => {
-		initialSpinner.style['opacity'] = '0'
-		overlayTitle.innerText = poi.title
-		overlayDescription.innerText = poi.description
-		overlay.style['display'] = 'initial'
-	}
+	overlayTitle.innerText = poi.title
+	overlayDescription.innerText = poi.description
+	overlay.style['display'] = 'initial'
 	distract = true
-	initialSpinner.style['opacity'] = '1'
-	if (poi.image) {
-		let image = imageMap[poi.image]
-		preloadImage(image, () => {
-			overlayImage.src = image
-			overlayImage.style['display'] = 'block'
-			fill()
-		})
-	} else {
-		fill()
-	}
 }
 const hideOverlay = () => {
 	overlay.style['display'] = 'none'
-	overlayImage.style['display'] = 'none'
 	distract = false
 }
 
