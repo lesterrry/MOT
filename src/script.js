@@ -31,7 +31,7 @@ class Poi {
 	}
 }
 class Camera {
-	constructor(zPosition, xMultiplier, xAppender, yMultiplier, yAppender, anchor, shadowsEnabled) {
+	constructor(zPosition, xMultiplier, xAppender, yMultiplier, yAppender, anchor, shadowsEnabled, lightIntensity) {
 		this.zPosition = zPosition
 		this.xMultiplier = xMultiplier
 		this.xAppender = xAppender
@@ -39,6 +39,7 @@ class Camera {
 		this.yAppender = yAppender
 		this.anchor = anchor
 		this.shadowsEnabled = shadowsEnabled
+		this.lightIntensity = lightIntensity
 	}
 }
 
@@ -48,20 +49,41 @@ class Camera {
 const EXHIBITS = [
 	new Exhibit (
 		'2412', 
-		'Автокатастрофа', 
-		'Этот экспонат — один из новых. Он показывает столкновение двух автомобилей — "Аварию". До открытия ускорения времени люди постоянно торопились и нередко погибали в спешке.', 
-		'/3d/Crash_v1.fbx', 
+		'Первый прорыв', 
+		'Эти древние цифровые часы с радио — объект многолетних лабораторных тестов. Именно на них впервые получилось удачно провести эксперимент по изменению течения времени.', 
+		'/3d/Clock_v0.fbx', 
 		[
-			
+			new Poi (
+				'Аналоговые кнопки', 
+				'Для того, чтобы пользоваться этим предметом, людям приходилось физически вдавливать выступающие части корпуса — кнопки — внутрь устройства. в 2133 году представить такое трудно.',
+				null,
+				0.027,
+				-0.008,
+			),
+			new Poi (
+				'Погасший дисплей', 
+				'Когда-то здесь отображались шесть цифр — они представляли текущее время в часах, минутах и секундах. Когда был проведен первый успешный опыт, время в тестовой камере удалось замедлить, и секунды стали идти медленнее.',
+				null,
+				0.027,
+				-0.194,
+			),
+			new Poi (
+				'Радиопередатчик', 
+				'Для того, чтобы коммуницировать с устройством из центра управления, ученые приделали к нему радиопередатчик, с помощью которого с точностью до миллисекунды синхронизировалось время.',
+				null,
+				-0.107,
+				-0.244,
+			),
 		],
 		new Camera (
+			10,
+			4,
+			0,
+			4,
 			5,
-			2.2,
-			1,
-			3,
-			2.5,
-			[0, 2, -2],
-			true
+			[0, 3, 0],
+			false,
+			0.2
 		)
 	),
 	new Exhibit (
@@ -92,7 +114,27 @@ const EXHIBITS = [
 			1,
 			1.5,
 			[0, 2.4, 0],
-			false
+			false,
+			0.4
+		)
+	),
+	new Exhibit (
+		'2412', 
+		'Автокатастрофа', 
+		'Этот экспонат — один из новых. Он показывает столкновение двух автомобилей — "Аварию". До открытия ускорения времени люди постоянно торопились и нередко погибали в спешке.', 
+		'/3d/Crash_v1.fbx', 
+		[
+			
+		],
+		new Camera (
+			5,
+			2.2,
+			1,
+			3,
+			2.5,
+			[0, 2, -2],
+			true,
+			0.4
 		)
 	),
 ]
@@ -343,10 +385,10 @@ const loadScene = (exhibit) => {
 	hemiLight.position.set(0, 200, 0)
 	scene.add(hemiLight)
 
-	const spotLight = new THREE.SpotLight(0xffffff, 0.4)
+	const spotLight = new THREE.SpotLight(0xffffff, exhibit.camera.lightIntensity)
 	spotLight.angle = Math.PI / 5
 	spotLight.penumbra = 0.8
-	spotLight.position.set(0, 5, 5)
+	spotLight.position.set(0, 10, 5)
 	spotLight.castShadow = exhibit.camera.shadowsEnabled
 	spotLight.shadow.camera.near = 3
 	spotLight.shadow.camera.far = 36
