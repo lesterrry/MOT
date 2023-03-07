@@ -65,8 +65,8 @@ const EXHIBITS = [
 			new Poi (
 				'Радиопередатчик', 
 				'Для того, чтобы коммуницировать с устройством из центра управления, ученые приделали к нему радиопередатчик, с помощью которого с точностью до миллисекунды синхронизировалось время.',
-				-0.107,
-				-0.244,
+				-0.140,
+				-0.220,
 			),
 		],
 		new Camera (
@@ -151,6 +151,8 @@ const client = window.navigator.userAgent
 const offset = 0.02
 let currentExhibit = EXHIBITS[0]
 let distract = true
+let currentOverlayFocus = 0
+let currentProgress = [false, false, false]
 
 // 
 // Cookie handling
@@ -233,10 +235,14 @@ const exhibitProgressSubtitleMap = [
 	exhibitProgressSubtitleB,
 	exhibitProgressSubtitleC
 ]
-// Obsolete
-const exhibitProgressDescriptionA = document.querySelector('.content .quest-progress p#a')
-const exhibitProgressDescriptionB = document.querySelector('.content .quest-progress p#b')
-const exhibitProgressDescriptionC = document.querySelector('.content .quest-progress p#c')
+const exhibitProgressSubtitleTickA = document.querySelector('.content .quest-progress .tick#a')
+const exhibitProgressSubtitleTickB = document.querySelector('.content .quest-progress .tick#b')
+const exhibitProgressSubtitleTickC = document.querySelector('.content .quest-progress .tick#c')
+const exhibitProgressSubtitleTickMap = [
+	exhibitProgressSubtitleTickA,
+	exhibitProgressSubtitleTickB,
+	exhibitProgressSubtitleTickC
+]
 
 //
 // Events
@@ -280,10 +286,9 @@ window.addEventListener('mousemove', (event) => {
 })
 window.addEventListener('click', () => {
 	if (cursor.focus !== false && !distract) {
+		currentOverlayFocus = cursor.focus
 		showOverlay(currentExhibit.pois[cursor.focus])
-		exhibitProgressSubtitleMap[cursor.focus].innerText = currentExhibit.pois[cursor.focus].title
 	}
-
 })
 window.addEventListener('load', () => {
 	if (!deserializeCookies()) {
@@ -297,7 +302,9 @@ relaunchButton.addEventListener('click', () => {
 	window.location.reload();
 })
 overlayCloseButton.addEventListener('click', () => {
-	hideOverlay()
+	hideOverlay(currentProgress[currentOverlayFocus])
+	currentProgress[currentOverlayFocus] = true
+	currentOverlayFocus = 0
 })
 
 //
@@ -320,9 +327,20 @@ const showOverlay = (poi) => {
 	overlay.style['display'] = 'initial'
 	distract = true
 }
-const hideOverlay = () => {
+const hideOverlay = (quiet) => {
+	console.log(quiet)
 	overlay.style['display'] = 'none'
 	distract = false
+	if (!quiet) {
+		exhibitProgressSubtitleMap[currentOverlayFocus].innerText = currentExhibit.pois[currentOverlayFocus].title
+		LOTTIE.loadAnimation({
+			container: exhibitProgressSubtitleTickMap[currentOverlayFocus],
+			renderer: 'svg',
+			loop: false,
+			autoplay: true,
+			path: '/lottie/tick.json'
+		})
+	}
 }
 
 //
