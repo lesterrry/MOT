@@ -149,10 +149,12 @@ let cursor = {
 }
 const client = window.navigator.userAgent
 const offset = 0.02
+let currentExhibitIndex = 0
 let currentExhibit = EXHIBITS[0]
 let distract = true
 let currentOverlayFocus = 0
 let currentProgress = [false, false, false]
+let finished = false
 
 // 
 // Cookie handling
@@ -216,16 +218,17 @@ const initialSpinner = document.querySelector('.spinner#initial')
 const termText = document.querySelector('p.term')
 const exLink = document.querySelector('a.logo-link')
 const overlayTitle = document.querySelector('.overlay.partial h1')
-const overlayCloseButton = document.querySelector('.overlay.partial h2')
+const overlayCloseButton = document.querySelector('.overlay.partial .button')
 const overlayDescription = document.querySelector('.overlay.partial p')
 const overlay = document.querySelector('.overlay.partial')
-const overlayImage = document.querySelector('.overlay.partial img')
+const overlayWindow = document.querySelector('.overlay.partial .window')
 const cornerTextLU = document.querySelector('.content h3#lu')
 const cornerTextRU = document.querySelector('.content h3#ru')
 const cornerTextLD = document.querySelector('.content h3#ld')
 const cornerTextRD = document.querySelector('.content h3#rd')
 const exhibitTitle = document.querySelector('.content h1')
 const exhibitDescription = document.querySelector('.description p')
+const exhibitProgress = document.querySelector('.content .quest-progress')
 const exhibitProgressTitle = document.querySelector('.content .quest-progress h2')
 const exhibitProgressSubtitleA = document.querySelector('.content .quest-progress h3#a')
 const exhibitProgressSubtitleB = document.querySelector('.content .quest-progress h3#b')
@@ -243,6 +246,9 @@ const exhibitProgressSubtitleTickMap = [
 	exhibitProgressSubtitleTickB,
 	exhibitProgressSubtitleTickC
 ]
+const exhibitProgressSubtitleTickH = document.querySelector('.content .quest-progress .tick#h')
+const exhibitProgressSubtitleSpinner = document.querySelector('.content .quest-progress .spinner')
+const exhibitProgressNextButton = document.querySelector('.content .quest-progress .button')
 
 //
 // Events
@@ -305,6 +311,15 @@ overlayCloseButton.addEventListener('click', () => {
 	hideOverlay(currentProgress[currentOverlayFocus])
 	currentProgress[currentOverlayFocus] = true
 	currentOverlayFocus = 0
+	if (array_true(currentProgress) && !finished) {
+		finished = true
+		exhibitProgressSubtitleSpinner.style['display'] = 'none'
+		gsap.to(exhibitProgress, { height: 245, duration: 0.5 })
+		loadTick(exhibitProgressSubtitleTickH)
+	}
+})
+exhibitProgressNextButton.addEventListener('click', () => {
+	if (finished) destroyScene()
 })
 
 //
@@ -317,6 +332,15 @@ const logoAnimation = LOTTIE.loadAnimation({
 	autoplay: false,
 	path: '/lottie/logo.json'
 })
+const loadTick = (into) => {
+LOTTIE.loadAnimation({
+		container: into,
+		renderer: 'svg',
+		loop: false,
+		autoplay: true,
+		path: '/lottie/tick.json'
+	})
+}
 
 //
 // Overlay
@@ -325,21 +349,15 @@ const showOverlay = (poi) => {
 	overlayTitle.innerText = poi.title
 	overlayDescription.innerText = poi.description
 	overlay.style['display'] = 'initial'
+	gsap.from(overlayWindow, { height: 0, duration: 0.5, clearProps: 'all' })
 	distract = true
 }
 const hideOverlay = (quiet) => {
-	console.log(quiet)
 	overlay.style['display'] = 'none'
 	distract = false
 	if (!quiet) {
 		exhibitProgressSubtitleMap[currentOverlayFocus].innerText = currentExhibit.pois[currentOverlayFocus].title
-		LOTTIE.loadAnimation({
-			container: exhibitProgressSubtitleTickMap[currentOverlayFocus],
-			renderer: 'svg',
-			loop: false,
-			autoplay: true,
-			path: '/lottie/tick.json'
-		})
+		loadTick(exhibitProgressSubtitleTickMap[currentOverlayFocus])
 	}
 }
 
@@ -357,9 +375,41 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+const prepareScene = (exhibit=currentExhibit) => {
+	loadScene(exhibit)
+	threeTick()
+	exLink.style['pointer-events'] = 'initial'
+	// TODO:
+	// Wait for cursor movement to suppress initial model jump
+	gsap.to(footer, { height: 60, duration: 1, delay: 0.5 })
+	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 1.25 })
+	distract = false
+}
+const destroyScene = () => {
+	distract = true
+	exLink.style['pointer-events'] = 'none'
+	gsap.to(footer, { height: '100%', duration: 1 })
+	gsap.to(menu, { bottom: -20, duration: 0.5 })
+	setTimeout(() => {
+		deloadScene()
+		forwardExhibit()
+		currentOverlayFocus = 0
+		currentProgress = [false, false, false]
+		finished = false
+		prepareScene()
+	}, 1100)
+}
 const loadScene = (exhibit) => {
 	exhibitTitle.innerText = exhibit.title
 	exhibitDescription.innerText = exhibit.description
+	exhibitProgressSubtitleMap.map((item) => {
+		item.innerText = '???'
+	})
+	exhibitProgressSubtitleTickMap.map((item) => {
+		item.innerHTML = ''
+	})
+	exhibitProgressSubtitleTickH.innerHTML = ''
+	exhibitProgress.style['height'] = ''
 	camera.position.set(0, 0, exhibit.camera.zPosition)
 	scene.add(camera)
 
@@ -403,6 +453,20 @@ const loadScene = (exhibit) => {
 	floor.rotation.x = - (Math.PI * 0.5)
 	floor.position.y = 0
 	scene.add(floor)
+}
+const deloadScene = () => {
+	while(scene.children.length > 0){ 
+		scene.remove(scene.children[0]); 
+	}
+}
+
+//
+// Service functions
+//
+const array_true = arr => arr.every(Boolean);
+const forwardExhibit = () => {
+	currentExhibitIndex++
+	currentExhibit = EXHIBITS[currentExhibitIndex]
 }
 
 //
@@ -501,13 +565,6 @@ const step3 = () => {
 	termText.innerHTML = ''
 	logoAnimation.playSegments([0, 9], true)
 	setTimeout(() => {
-		loadScene(currentExhibit)
-		threeTick()
-		exLink.style['pointer-events'] = 'initial'
-		// TODO:
-		// Wait for cursor movement to suppress initial model movement
-		gsap.to(footer, { height: 60, duration: 1, delay: 0.5 })
-		gsap.to(menu, { bottom: 22, duration: 0.5, delay: 1.25 })
-		distract = false
+		prepareScene()
 	}, 500)
 }

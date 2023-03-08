@@ -29,9 +29,8 @@
 	<div class="overlay partial">
 		<div class="window">
 			<h1></h1>
-			<h2>X</h2>
 			<p></p>
-			<img>
+			<div class="button"><h4>Готово</h4></div>
 		</div>
 	</div>
 	<div class="content">
@@ -45,7 +44,11 @@
 		</div>
 		<div class="quest-progress">
 			<div class="heading">
-				<h2>ОСМОТРИТЕ ЭКСПОНАТ</h2><img class="spinner" src="../static/img/loading.png">
+				<h2>ОСМОТРИТЕ ЭКСПОНАТ</h2>
+				<div class="box">
+					<div id="h" class="tick"></div>
+					<img class="spinner" src="../static/img/loading.png">
+				</div>
 			</div>
 			<div class="subheading">
 				<div id="a" class="tick"></div><h3 id="a">???</h3>
@@ -56,6 +59,7 @@
 			<div class="subheading">
 				<div id="c" class="tick"></div><h3 id="c">???</h3>
 			</div>
+			<div class="button"><h4>Далее</h4></div>
 		</div>
 		<canvas class="webgl"></canvas>
 	</div>
