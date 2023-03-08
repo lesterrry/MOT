@@ -142,6 +142,25 @@ const EXHIBITS = [
 		)
 	),
 	new Exhibit (
+		true,
+		'2412', 
+		'Прототип A/3841-M', 
+		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени.', 
+		'/3d/Charger_v1.fbx', 
+		[],
+		new Camera (
+			20,
+			30,
+			0,
+			18,
+			10,
+			[0, 10, 0],
+			true,
+			0.4,
+			30
+		)
+	),
+	new Exhibit (
 		false,
 		'2412', 
 		'Автокатастрофа', 
@@ -200,7 +219,7 @@ let cursor = {
 const client = window.navigator.userAgent
 const offset = 0.02
 let currentExhibitIndex = 0
-let currentExhibit = EXHIBITS[0]
+let currentExhibit = EXHIBITS[3]
 let distract = true
 let currentOverlayFocus = 0
 let currentProgress = [false, false, false]
