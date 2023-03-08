@@ -10,7 +10,8 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 // Exhibits
 //
 class Exhibit {
-	constructor(index, title, description, model, pois, camera) {
+	constructor(is_artifact, index, title, description, model, pois, camera) {
+		this.is_artifact = is_artifact
 		this.index = index
 		this.title = title
 		this.description = description
@@ -28,7 +29,7 @@ class Poi {
 	}
 }
 class Camera {
-	constructor(zPosition, xMultiplier, xAppender, yMultiplier, yAppender, anchor, shadowsEnabled, lightIntensity) {
+	constructor(zPosition, xMultiplier, xAppender, yMultiplier, yAppender, anchor, shadowsEnabled, lightIntensity, lightHeight) {
 		this.zPosition = zPosition
 		this.xMultiplier = xMultiplier
 		this.xAppender = xAppender
@@ -37,6 +38,7 @@ class Camera {
 		this.anchor = anchor
 		this.shadowsEnabled = shadowsEnabled
 		this.lightIntensity = lightIntensity
+		this.lightHeight = lightHeight
 	}
 }
 
@@ -45,6 +47,7 @@ class Camera {
 //
 const EXHIBITS = [
 	new Exhibit (
+		false,
 		'2412', 
 		'Первый прорыв', 
 		'Эти древние цифровые часы с радио — объект многолетних лабораторных тестов. Именно на них впервые получилось удачно провести эксперимент по изменению течения времени.', 
@@ -77,10 +80,31 @@ const EXHIBITS = [
 			5,
 			[0, 3, 0],
 			false,
-			0.2
+			0.4,
+			10
 		)
 	),
 	new Exhibit (
+		true,
+		'2412', 
+		'Прототип A/3841-M', 
+		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени.', 
+		'/3d/Reactor_v0.fbx', 
+		[],
+		new Camera (
+			20,
+			30,
+			0,
+			18,
+			10,
+			[0, 10, 0],
+			true,
+			0.4,
+			30
+		)
+	),
+	new Exhibit (
+		false,
 		'2412', 
 		'Ожидатель', 
 		'“Ожидатель” представляет собой репродукцию знаменитой скульптуры родена “мыслитель”, созданную около ста лет назад. это образ человека, утомленного ожиданием — типичное зрелище для XXI века.', 
@@ -97,6 +121,12 @@ const EXHIBITS = [
 				'Глаза человека, проведшего в ожидании не один час. нашим современникам трудно представить это чувство, но летописи описывают его не иначе как невыносимое',
 				0.008,
 				0.209
+			),
+			new Poi (
+				'Неудобная поза',
+				'Сидеть длительное время на лавке или твердом стуле — настоящая пытка. За время ожидания человек перепробовал десятки разных поз, и в каждой ему было неудобно',
+				-0.044,
+				0.063
 			)
 		],
 		new Camera (
@@ -107,16 +137,35 @@ const EXHIBITS = [
 			1.5,
 			[0, 2.4, 0],
 			false,
-			0.4
+			0.4,
+			10
 		)
 	),
 	new Exhibit (
+		false,
 		'2412', 
 		'Автокатастрофа', 
 		'Этот экспонат — один из новых. Он показывает столкновение двух автомобилей — "Аварию". До открытия ускорения времени люди постоянно торопились и нередко погибали в спешке.', 
 		'/3d/Crash_v1.fbx', 
 		[
-			
+			new Poi (
+				'Смерть водителя', 
+				'Ни одна технология безопасности не спасла: водитель скончался на месте. Приехавшим врачам осталось только констатировать этот факт.',
+				0.067,
+				-0.065,
+			),
+			new Poi (
+				'Серьезные повреждения',
+				'Обе машины отправятся на свалку: после таких повреждений они — лишь металлолом.',
+				-0.072,
+				-0.221
+			),
+			new Poi (
+				'Высокая скорость',
+				'Задние колеса универсала поднялись в воздух: водитель спешил и превышал. Цена этого решения оказалась для него слишком высокой.',
+				0.300,
+				-0.212
+			)
 		],
 		new Camera (
 			5,
@@ -126,7 +175,8 @@ const EXHIBITS = [
 			2.5,
 			[0, 2, -2],
 			true,
-			0.4
+			0.4,
+			10
 		)
 	),
 ]
@@ -212,7 +262,7 @@ const menu = document.querySelector('div.menu')
 const logo = document.querySelector('div.logo')
 const relaunchButton = document.querySelector('a#relaunch')
 const exhibitsButton = document.querySelector('a#to-exhibits')
-const artefactsButton = document.querySelector('a#to-artefacts')
+const helpButton = document.querySelector('a#to-help')
 const aboutButton = document.querySelector('a#to-about')
 const initialSpinner = document.querySelector('.spinner#initial')
 const termText = document.querySelector('p.term')
@@ -226,6 +276,12 @@ const cornerTextLU = document.querySelector('.content h3#lu')
 const cornerTextRU = document.querySelector('.content h3#ru')
 const cornerTextLD = document.querySelector('.content h3#ld')
 const cornerTextRD = document.querySelector('.content h3#rd')
+const cornerTextMap = [
+	cornerTextLU,
+	cornerTextRU,
+	cornerTextLD,
+	cornerTextRD
+]
 const exhibitTitle = document.querySelector('.content h1')
 const exhibitDescription = document.querySelector('.description p')
 const exhibitProgress = document.querySelector('.content .quest-progress')
@@ -314,7 +370,8 @@ overlayCloseButton.addEventListener('click', () => {
 	if (array_true(currentProgress) && !finished) {
 		finished = true
 		exhibitProgressSubtitleSpinner.style['display'] = 'none'
-		gsap.to(exhibitProgress, { height: 245, duration: 0.5 })
+		exhibitProgressTitle.innerText = 'Все детали найдены'
+		setExhibitProgressButton(true, false, true)
 		loadTick(exhibitProgressSubtitleTickH)
 	}
 })
@@ -362,6 +419,30 @@ const hideOverlay = (quiet) => {
 }
 
 //
+// Exhibit progress
+//
+const setExhibitProgressButton = (visible, compact, animate) => {
+	exhibitProgress.style['height'] = ''
+	if (visible) {
+		if (compact) {
+			exhibitProgress.style['height'] = 'initial'
+		} else {
+			if (animate) {
+				gsap.to(exhibitProgress, { height: 245, duration: 0.5 })
+			} else {
+				exhibitProgress.style['height'] = '245'
+			}
+		}
+	} else {
+		if (animate) {
+			gsap.to(exhibitProgress, { height: 188, duration: 0.5 })
+		} else {
+			exhibitProgress.style['height'] = '	188'
+		}
+	}
+}
+
+//
 // Three & Scenes
 //
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
@@ -395,34 +476,43 @@ const destroyScene = () => {
 		forwardExhibit()
 		currentOverlayFocus = 0
 		currentProgress = [false, false, false]
-		finished = false
 		prepareScene()
 	}, 1100)
 }
 const loadScene = (exhibit) => {
+	finished = exhibit.is_artifact ? true : false
+	cursorSub.style['background-color'] = exhibit.is_artifact ? 'white' : 'black'
+	cursorSub.style['border-color'] = exhibit.is_artifact ? 'white' : 'black'
+	cornerTextMap.map((item) => {
+		item.style['display'] = exhibit.is_artifact ? 'none' : ''
+	})
 	exhibitTitle.innerText = exhibit.title
+	exhibitTitle.style['color'] = exhibit.is_artifact ? 'white' : 'black'
 	exhibitDescription.innerText = exhibit.description
+	exhibitProgressTitle.innerText = exhibit.is_artifact ? 'Разблокирован артефакт' : 'Осмотрите экспонат'
 	exhibitProgressSubtitleMap.map((item) => {
-		item.innerText = '???'
+		item.innerText = exhibit.is_artifact ? '' : '???'
 	})
 	exhibitProgressSubtitleTickMap.map((item) => {
 		item.innerHTML = ''
+		item.style['height'] = exhibit.is_artifact ? 'initial' : ''
 	})
 	exhibitProgressSubtitleTickH.innerHTML = ''
-	exhibitProgress.style['height'] = ''
+	setExhibitProgressButton(exhibit.is_artifact, exhibit.is_artifact, false)
+	exhibitProgressSubtitleSpinner.style['display'] = exhibit.is_artifact ? 'none' : ''
 	camera.position.set(0, 0, exhibit.camera.zPosition)
 	scene.add(camera)
 
-	scene.background = new THREE.Color(0xdbd7d2)
+	scene.background = new THREE.Color(exhibit.is_artifact ? 0x171717 : 0xdbd7d2)
 
-	const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444)
+	const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, exhibit.camera.lightIntensity + 0.6)
 	hemiLight.position.set(0, 200, 0)
 	scene.add(hemiLight)
 
 	const spotLight = new THREE.SpotLight(0xffffff, exhibit.camera.lightIntensity)
 	spotLight.angle = Math.PI / 5
 	spotLight.penumbra = 0.8
-	spotLight.position.set(0, 10, 5)
+	spotLight.position.set(0, exhibit.camera.lightHeight, 5)
 	spotLight.castShadow = exhibit.camera.shadowsEnabled
 	spotLight.shadow.camera.near = 3
 	spotLight.shadow.camera.far = 36
@@ -445,7 +535,7 @@ const loadScene = (exhibit) => {
 	const floor = new THREE.Mesh(
 		new THREE.PlaneGeometry(1000, 1000),
 		new THREE.MeshPhongMaterial({
-			color: 0xdbd7d2,
+			color: exhibit.is_artifact ? 0x171717 : 0xdbd7d2,
 			depthWrite: false
 		})
 	)
