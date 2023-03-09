@@ -144,22 +144,31 @@ const EXHIBITS = [
 	new Exhibit (
 		true,
 		'2412', 
-		'Прототип A/3841-M', 
-		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени.', 
+		'Skip Model H3000', 
+		'Model H3000 — первое устройство компании, которое начали массово выпускать. Массивная установка, потребляющая огромное количество энергии, стоила как 5 самолетов Boeing 737-800. Именно в аэропортах впервые и появились эти машины, сделав ожидание людей в залах более приятным.', 
 		'/3d/Charger_v1.fbx', 
 		[],
 		new Camera (
-			20,
-			30,
+			3,
+			12,
 			0,
-			18,
-			10,
-			[0, 10, 0],
+			5,
+			3,
+			[0, 2, 0],
 			true,
 			0.4,
-			30
+			10
 		)
 	),
+	// this.zPosition = zPosition
+	// this.xMultiplier = xMultiplier
+	// this.xAppender = xAppender
+	// this.yMultiplier = yMultiplier
+	// this.yAppender = yAppender
+	// this.anchor = anchor
+	// this.shadowsEnabled = shadowsEnabled
+	// this.lightIntensity = lightIntensity
+	// this.lightHeight = lightHeight
 	new Exhibit (
 		false,
 		'2412', 
