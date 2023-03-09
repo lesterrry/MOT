@@ -48,7 +48,7 @@ class Camera {
 const EXHIBITS = [
 	new Exhibit (
 		false,
-		'2412', 
+		null, 
 		'Первый прорыв', 
 		'Эти древние цифровые часы с радио — объект многолетних лабораторных тестов. Именно на них впервые получилось удачно провести эксперимент по изменению течения времени.', 
 		'/3d/Clock_v0.fbx', 
@@ -86,7 +86,7 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		true,
-		'2412', 
+		null, 
 		'Прототип A/3841-M', 
 		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени.', 
 		'/3d/Reactor_v0.fbx', 
@@ -105,7 +105,7 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		false,
-		'2412', 
+		null, 
 		'Ожидатель', 
 		'“Ожидатель” представляет собой репродукцию знаменитой скульптуры родена “мыслитель”, созданную около ста лет назад. это образ человека, утомленного ожиданием — типичное зрелище для XXI века.', 
 		'/3d/Thinker_v9.fbx', 
@@ -143,7 +143,7 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		true,
-		'2412', 
+		null, 
 		'Skip Model H3000', 
 		'Model H3000 — первое устройство компании, которое начали массово выпускать. Массивная установка, потребляющая огромное количество энергии, стоила как 5 самолетов Boeing 737-800. Именно в аэропортах впервые и появились эти машины, сделав ожидание людей в залах более приятным.', 
 		'/3d/Charger_v1.fbx', 
@@ -160,18 +160,9 @@ const EXHIBITS = [
 			10
 		)
 	),
-	// this.zPosition = zPosition
-	// this.xMultiplier = xMultiplier
-	// this.xAppender = xAppender
-	// this.yMultiplier = yMultiplier
-	// this.yAppender = yAppender
-	// this.anchor = anchor
-	// this.shadowsEnabled = shadowsEnabled
-	// this.lightIntensity = lightIntensity
-	// this.lightHeight = lightHeight
 	new Exhibit (
 		false,
-		'2412', 
+		null, 
 		'Автокатастрофа', 
 		'Этот экспонат — один из новых. Он показывает столкновение двух автомобилей — "Аварию". До открытия ускорения времени люди постоянно торопились и нередко погибали в спешке.', 
 		'/3d/Crash_v1.fbx', 
@@ -207,6 +198,34 @@ const EXHIBITS = [
 			10
 		)
 	),
+	new Exhibit (
+		true,
+		null, 
+		'Skip Model C200', 
+		'Первая модель, которую поступала в розничную продажу и стала доступна людям — Model C200. Несмотря на стоимость, сравнимую с двумя Bentley Continental GT, спрос на прибор зашкаливал, ведь он предоставлял каждому уникальную возможность исказить время. По текущим стандартам С200 был примитивным, позволяя только замедлять время и работая от автомобильного двигателя. Прорывным же была функция автоматического замедления, помогающая водителям избегать аварий.', 
+		'/3d/CarRadio_v1.fbx', 
+		[],
+		new Camera (
+			8,
+			12,
+			0,
+			6,
+			2,
+			[0, 2, 3],
+			true,
+			0.4,
+			10
+		)
+	),
+	// this.zPosition = zPosition
+	// this.xMultiplier = xMultiplier
+	// this.xAppender = xAppender
+	// this.yMultiplier = yMultiplier
+	// this.yAppender = yAppender
+	// this.anchor = anchor
+	// this.shadowsEnabled = shadowsEnabled
+	// this.lightIntensity = lightIntensity
+	// this.lightHeight = lightHeight
 ]
 const sizes = {
 	width: window.innerWidth,
@@ -226,9 +245,9 @@ let cursor = {
 	focus: false
 }
 const client = window.navigator.userAgent
-const offset = 0.02
-let currentExhibitIndex = 0
-let currentExhibit = EXHIBITS[3]
+const clueHuntOffset = 0.04
+let currentExhibitIndex = 5
+let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
 let currentOverlayFocus = 0
 let currentProgress = [false, false, false]
@@ -354,11 +373,12 @@ window.addEventListener('mousemove', (event) => {
 		cursor.x.cornerCurrent = event.clientX
 		cursor.y.cornerCurrent = event.clientY
 	}
+	if (distract) return
 	let any = false
 	for (var i = 0; i < currentExhibit.pois.length; i++) {
 		if (
-			(cursor.x.center >= currentExhibit.pois[i].x - offset) && (cursor.x.center <= currentExhibit.pois[i].x + offset) &&
-			(cursor.y.center >= currentExhibit.pois[i].y - offset) && (cursor.y.center <= currentExhibit.pois[i].y + offset)
+			(cursor.x.center >= currentExhibit.pois[i].x - clueHuntOffset) && (cursor.x.center <= currentExhibit.pois[i].x + clueHuntOffset) &&
+			(cursor.y.center >= currentExhibit.pois[i].y - clueHuntOffset) && (cursor.y.center <= currentExhibit.pois[i].y + clueHuntOffset)
 		) {
 			if (cursor.focus === false) {
 				gsap.to(cursorSub, { borderWidth: 2, backgroundColor: "rgba(0,0,0,0)", duration: 0.25 })
@@ -378,6 +398,7 @@ window.addEventListener('click', () => {
 	if (cursor.focus !== false && !distract) {
 		currentOverlayFocus = cursor.focus
 		showOverlay(currentExhibit.pois[cursor.focus])
+		cursor.focus = false
 	}
 })
 window.addEventListener('load', () => {
