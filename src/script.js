@@ -217,6 +217,44 @@ const EXHIBITS = [
 			10
 		)
 	),
+	new Exhibit (
+		false,
+		null, 
+		'Эконом-класс', 
+		'Перед нами ценнейшая древность — кресла самолета эконом-класса. В прошлом люди проводили мучительно долгие часы, сидя в неудобных, жестких сидениях с крошечным пространством для ног. К счастью, эти муки потеряли актуальность много десятилетий назад, и теперь даже трансатлантический перелет занимает не более пяти минут.', 
+		'/3d/Seats_v1.fbx', 
+		[
+			new Poi (
+				'Неудобный подголовник', 
+				'Крепко уснуть на таком невозможно. Все, что остается — проваливаться в тревожный, минутный сон, не приносящий никакого отдыха.',
+				-0.100,
+				0.124,
+			),
+			new Poi (
+				'Нет места для ног',
+				'Храни вас бог, если ваш рост больше 180 сантиметров. Единственный вариант в такой ситуации — размещать ноги в проходе, но в таком случае обязательно следите, чтобы их вам не оторвало тележкой с едой.',
+				0.029,
+				-0.245
+			),
+			new Poi (
+				'Крохотный столик',
+				'Ни полноценно поесть, ни разместить ноутбук на таком не выйдет, так что придется импровизировать.',
+				-0.150,
+				-0.069
+			)
+		],
+		new Camera (
+			5,
+			6,
+			-2,
+			5,
+			2.5,
+			[0, 2, 2],
+			true,
+			0.4,
+			10
+		)
+	),
 	// this.zPosition = zPosition
 	// this.xMultiplier = xMultiplier
 	// this.xAppender = xAppender
@@ -246,7 +284,7 @@ let cursor = {
 }
 const client = window.navigator.userAgent
 const clueHuntOffset = 0.04
-let currentExhibitIndex = 5
+let currentExhibitIndex = 6
 let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
 let currentOverlayFocus = 0
@@ -381,7 +419,7 @@ window.addEventListener('mousemove', (event) => {
 			(cursor.y.center >= currentExhibit.pois[i].y - clueHuntOffset) && (cursor.y.center <= currentExhibit.pois[i].y + clueHuntOffset)
 		) {
 			if (cursor.focus === false) {
-				gsap.to(cursorSub, { borderWidth: 2, backgroundColor: "rgba(0,0,0,0)", duration: 0.25 })
+				setCursor(true)
 				cursor.focus = i
 			}
 			any = true
@@ -389,16 +427,17 @@ window.addEventListener('mousemove', (event) => {
 		}
 	}
 	if (!any && cursor.focus !== false) {
-		gsap.to(cursorSub, { borderWidth: 10, backgroundColor: "black", duration: 0.25 })
+		setCursor(false)
 		cursor.focus = false
 	}
-	// console.log(cursor.x.center, cursor.y.center)
+	console.log(cursor.x.center, cursor.y.center)
 })
 window.addEventListener('click', () => {
 	if (cursor.focus !== false && !distract) {
 		currentOverlayFocus = cursor.focus
 		showOverlay(currentExhibit.pois[cursor.focus])
 		cursor.focus = false
+		setCursor(false)
 	}
 })
 window.addEventListener('load', () => {
@@ -446,6 +485,17 @@ LOTTIE.loadAnimation({
 		autoplay: true,
 		path: '/lottie/tick.json'
 	})
+}
+
+//
+// Cursor
+//
+const setCursor = (focused) => {
+	if (focused) {
+		gsap.to(cursorSub, { borderWidth: 2, backgroundColor: "rgba(0,0,0,0)", duration: 0.25 })
+	} else {
+		gsap.to(cursorSub, { borderWidth: 10, backgroundColor: "black", duration: 0.25 })
+	}
 }
 
 //

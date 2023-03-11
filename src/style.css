@@ -439,8 +439,6 @@ canvas {
 	z-index: 1;
 	position: absolute;
 	background-color: black;
-	/*-webkit-backdrop-filter: invert(100%);
-  	backdrop-filter: invert(100%);*/
   	border: 10px solid;
 	border-radius: 50%;
 	border-color: black;
