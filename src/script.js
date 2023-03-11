@@ -239,7 +239,7 @@ const EXHIBITS = [
 			new Poi (
 				'Крохотный столик',
 				'Ни полноценно поесть, ни разместить ноутбук на таком не выйдет, так что придется импровизировать.',
-				-0.150,
+				-0.410,
 				-0.069
 			)
 		],
@@ -273,7 +273,8 @@ let cursor = {
 	x: {
 		center: 0,
 		corner: 0,
-		cornerCurrent: 0
+		cornerCurrent: 0,
+		balanced: 0
 	},
 	y: {
 		center: 0,
@@ -407,6 +408,7 @@ window.addEventListener('mousemove', (event) => {
 	cursor.y.corner = event.clientY - 11
 	cursor.x.center = event.clientX / sizes.width - 0.5
 	cursor.y.center = - (event.clientY / sizes.height - 0.5)
+	cursor.x.balanced = cursor.x.center * (sizes.width / sizes.height)
 	if (cursor.x.cornerCurrent == 0) {
 		cursor.x.cornerCurrent = event.clientX
 		cursor.y.cornerCurrent = event.clientY
@@ -415,7 +417,7 @@ window.addEventListener('mousemove', (event) => {
 	let any = false
 	for (var i = 0; i < currentExhibit.pois.length; i++) {
 		if (
-			(cursor.x.center >= currentExhibit.pois[i].x - clueHuntOffset) && (cursor.x.center <= currentExhibit.pois[i].x + clueHuntOffset) &&
+			(cursor.x.balanced >= currentExhibit.pois[i].x - clueHuntOffset) && (cursor.x.balanced <= currentExhibit.pois[i].x + clueHuntOffset) &&
 			(cursor.y.center >= currentExhibit.pois[i].y - clueHuntOffset) && (cursor.y.center <= currentExhibit.pois[i].y + clueHuntOffset)
 		) {
 			if (cursor.focus === false) {
@@ -430,7 +432,7 @@ window.addEventListener('mousemove', (event) => {
 		setCursor(false)
 		cursor.focus = false
 	}
-	console.log(cursor.x.center, cursor.y.center)
+	console.log(cursor.x.balanced, cursor.y.center)
 })
 window.addEventListener('click', () => {
 	if (cursor.focus !== false && !distract) {
