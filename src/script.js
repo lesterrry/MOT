@@ -333,42 +333,42 @@ const EXHIBITS = [
 	)
 ]
 const GALLERY = new Exhibit (
-		false,
-		null, 
-		'Все экспонаты', 
-		'Еще одна реликвия, датированная 2023 годом: напоминание о том, к каким занятиям прибегали люди из прошлого, стараясь развлечь себя в ежедневных ожиданиях. Кроме оригами к таковым можно отнести вязание, сканворды и судоку. Это все, конечно, если под рукой не окажется телефона.', 
-		'/3d/Crane_v3.fbx', 
-		[
-			new Poi (
-				'Почтовое извещение', 
-				'Скучая, кто-то обнаружил у себя под рукой типовое почтовое извещение — бумажный документ, сообщающий, что адресата в отделении ожидает посылка.',
-				0.214,
-				0.164,
-			),
-			new Poi (
-				'Телефонный номер',
-				'На извещении синей ручкой написан номер телефона — вероятно, получатель написал его, чтобы не забыть. Может быть, складывая журавлика, он ожидал назначенного звонка?',
-				0.005,
-				0.129
-			),
-			new Poi (
-				'Впечатляющая техника',
-				'Эта поделка явно заняла некоторое время: только посмотрите, как мастерски она выполнена.',
-				0.197,
-				0.321
-			)
-		],
-		new Camera (
-			2,
-			12,
-			0,
-			0.5,
-			0,
-			[0, 0, 0],
-			true,
-			0.3,
-			10
+	false,
+	null, 
+	'Все экспонаты', 
+	'Еще одна реликвия, датированная 2023 годом: напоминание о том, к каким занятиям прибегали люди из прошлого, стараясь развлечь себя в ежедневных ожиданиях. Кроме оригами к таковым можно отнести вязание, сканворды и судоку. Это все, конечно, если под рукой не окажется телефона.', 
+	'/3d/Crane_v3.fbx', 
+	[
+		new Poi (
+			'Почтовое извещение', 
+			'Скучая, кто-то обнаружил у себя под рукой типовое почтовое извещение — бумажный документ, сообщающий, что адресата в отделении ожидает посылка.',
+			0.214,
+			0.164,
+		),
+		new Poi (
+			'Телефонный номер',
+			'На извещении синей ручкой написан номер телефона — вероятно, получатель написал его, чтобы не забыть. Может быть, складывая журавлика, он ожидал назначенного звонка?',
+			0.005,
+			0.129
+		),
+		new Poi (
+			'Впечатляющая техника',
+			'Эта поделка явно заняла некоторое время: только посмотрите, как мастерски она выполнена.',
+			0.197,
+			0.321
 		)
+	],
+	new Camera (
+		2,
+		12,
+		0,
+		0.5,
+		0,
+		[0, 0, 0],
+		true,
+		0.3,
+		10
+	)
 )
 const sizes = {
 	width: window.innerWidth,
@@ -390,12 +390,18 @@ let cursor = {
 }
 const client = window.navigator.userAgent
 const clueHuntOffset = 0.04
-let currentExhibitIndex = 0
+let currentExhibitIndex = 4
 let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
 let currentOverlayFocus = 0
 let currentProgress = [false, false, false]
 let finished = false
+const clock = new THREE.Clock()
+let TPF = 0
+let last = 0
+let logoHover = false
+let logoAnimationNormalized = false
+let threeLoaded = false
 
 // 
 // Cookie handling
@@ -537,7 +543,7 @@ window.addEventListener('mousemove', (event) => {
 		setCursor(false)
 		cursor.focus = false
 	}
-	console.log(cursor.x.balanced, cursor.y.center)
+	// console.log(cursor.x.balanced, cursor.y.center)
 })
 window.addEventListener('click', () => {
 	if (cursor.focus !== false && !distract) {
@@ -551,8 +557,12 @@ window.addEventListener('load', () => {
 	if (!deserializeCookies()) {
 		serializeCookies()
 	}
-	gsap.to(initialSpinner, { opacity: 0, duration: 0.25})
-	setTimeout(() => { flow(cookies.progress != '0') }, 1000)  // Delay for load-safety
+	setSpinner(false)
+	threeTick()
+	setTimeout(() => { 
+		initialSpinner.style['top'] = '80px'
+		flow(cookies.progress != '0')
+	}, 1000)  // Delay for load-safety
 })
 relaunchButton.addEventListener('click', () => {
 	cookies.progress = '0'
@@ -625,6 +635,22 @@ const hideOverlay = (quiet) => {
 }
 
 //
+// Initial spinner
+//
+const setSpinner = (visible) => {
+	if (visible) {
+		initialSpinner.style['opacity'] = '0'
+		initialSpinner.style['display'] = 'initial'
+		gsap.to(initialSpinner, { opacity: 1, duration: 0.25, immediateRender: false })
+	} else {
+		initialSpinner.style['opacity'] = '1'
+		gsap.to(initialSpinner, { opacity: 0, duration: 0.25, immediateRender: false, onComplete: () => {
+			initialSpinner.style['display'] = 'none'
+		} })
+	}
+}
+
+//
 // Exhibit progress
 //
 const setExhibitProgressButton = (visible, compact, animate) => {
@@ -663,14 +689,11 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 const prepareScene = (exhibit=currentExhibit) => {
-	loadScene(exhibit)
-	threeTick()
-	exLink.style['pointer-events'] = 'initial'
-	// TODO:
-	// Wait for cursor movement to suppress initial model jump
-	gsap.to(footer, { height: 60, duration: 1, delay: 0.5 })
-	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 1.25 })
-	distract = false
+	setSpinner(true)
+	setTimeout(() => {
+		loadScene(exhibit)
+		
+	}, 500)
 }
 const destroyScene = () => {
 	distract = true
@@ -684,6 +707,15 @@ const destroyScene = () => {
 		currentProgress = [false, false, false]
 		prepareScene()
 	}, 1100)
+}
+const finalizeScene = () => {
+	exLink.style['pointer-events'] = 'initial'
+	// TODO:
+	// Wait for cursor movement to suppress initial model jump
+	gsap.to(footer, { height: 60, duration: 1, delay: 0.25 })
+	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 0 })
+	setSpinner(false)
+	distract = false
 }
 const loadScene = (exhibit) => {
 	finished = exhibit.is_artifact ? true : false
@@ -736,9 +768,12 @@ const loadScene = (exhibit) => {
 			}
 		})
 		scene.add(object)
+		finalizeScene()
+		threeLoaded = true
 	})
 }
 const deloadScene = () => {
+	threeLoaded = false
 	while(scene.children.length > 0){ 
 		scene.remove(scene.children[0]); 
 	}
@@ -756,47 +791,44 @@ const forwardExhibit = () => {
 //
 // Main loop
 //
-const clock = new THREE.Clock()
-let TPF = 0
-let last = 0
-let logoHover = false
-let logoAnimationNormalized = false
-
 const threeTick = () => {
-	const elapsedTime = clock.getElapsedTime()
-	TPF = Math.round((elapsedTime - last) * 100) / 100
-	last = elapsedTime
+	// console.log("A")
+	if (threeLoaded) {
+		const elapsedTime = clock.getElapsedTime()
+		TPF = Math.round((elapsedTime - last) * 100) / 100
+		last = elapsedTime
 
-	camera.position.x = (cursor.x.center * currentExhibit.camera.xMultiplier) + currentExhibit.camera.xAppender
-	camera.position.y = (cursor.y.center * currentExhibit.camera.yMultiplier) + currentExhibit.camera.yAppender
-	camera.lookAt(new THREE.Vector3(...currentExhibit.camera.anchor))
+		camera.position.x = (cursor.x.center * currentExhibit.camera.xMultiplier) + currentExhibit.camera.xAppender
+		camera.position.y = (cursor.y.center * currentExhibit.camera.yMultiplier) + currentExhibit.camera.yAppender
+		camera.lookAt(new THREE.Vector3(...currentExhibit.camera.anchor))
 
-	renderer.render(scene, camera)
+		renderer.render(scene, camera)
 
-	cursor.x.cornerCurrent += (cursor.x.corner - cursor.x.cornerCurrent) * (TPF * 10)
-	cursor.y.cornerCurrent += (cursor.y.corner - cursor.y.cornerCurrent) * (TPF * 10)
-	const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
-	let s = cursorSub.style
+		cursor.x.cornerCurrent += (cursor.x.corner - cursor.x.cornerCurrent) * (TPF * 10)
+		cursor.y.cornerCurrent += (cursor.y.corner - cursor.y.cornerCurrent) * (TPF * 10)
+		const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
+		let s = cursorSub.style
 
-	s['transform'] = t
-	s['webkitTransform'] = t
-	s['mozTransform'] = t
-	s['msTransform'] = t
+		s['transform'] = t
+		s['webkitTransform'] = t
+		s['mozTransform'] = t
+		s['msTransform'] = t
 
-	if (logo.matches(":hover") != logoHover) {
-		if (logoHover) {
-			logoAnimation.setDirection(-1)
-			logoAnimation.play()
-		} else {
-			if (logoAnimationNormalized) {
-				logoAnimation.setDirection(1)
+		if (logo.matches(":hover") != logoHover) {
+			if (logoHover) {
+				logoAnimation.setDirection(-1)
 				logoAnimation.play()
 			} else {
-				logoAnimation.playSegments([9, 21], true)
-				logoAnimationNormalized = true
+				if (logoAnimationNormalized) {
+					logoAnimation.setDirection(1)
+					logoAnimation.play()
+				} else {
+					logoAnimation.playSegments([9, 21], true)
+					logoAnimationNormalized = true
+				}
 			}
+			logoHover = !logoHover
 		}
-		logoHover = !logoHover
 	}
 	window.requestAnimationFrame(threeTick)
 }
