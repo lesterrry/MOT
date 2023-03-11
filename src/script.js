@@ -689,18 +689,6 @@ const loadScene = (exhibit) => {
 		})
 		scene.add(object)
 	})
-
-	const floor = new THREE.Mesh(
-		new THREE.PlaneGeometry(1000, 1000),
-		new THREE.MeshPhongMaterial({
-			color: exhibit.is_artifact ? 0x171717 : 0xdbd7d2,
-			depthWrite: false
-		})
-	)
-	floor.receiveShadow = false
-	floor.rotation.x = - (Math.PI * 0.5)
-	floor.position.y = 0
-	scene.add(floor)
 }
 const deloadScene = () => {
 	while(scene.children.length > 0){ 
