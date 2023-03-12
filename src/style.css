@@ -156,7 +156,6 @@ img, svg {
 }
 
 .overlay {
-	z-index: 6;
 	position: absolute;
 	display: none;
 	width: 100%;
@@ -164,15 +163,16 @@ img, svg {
 }
 
 .overlay.full {
+	z-index: 7;
 	background-color: black;
 }
 
 .overlay.partial {
+	z-index: 6;
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
 .overlay.partial .window {
-	z-index: 6;
 	position: relative;
 	background-color: black;
 	width: 450px;
