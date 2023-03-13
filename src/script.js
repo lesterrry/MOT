@@ -390,7 +390,7 @@ let cursor = {
 }
 const client = window.navigator.userAgent
 const clueHuntOffset = 0.04
-let currentExhibitIndex = 4
+let currentExhibitIndex = 0
 let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
 let currentOverlayFocus = 0
@@ -692,7 +692,6 @@ const prepareScene = (exhibit=currentExhibit) => {
 	setSpinner(true)
 	setTimeout(() => {
 		loadScene(exhibit)
-		
 	}, 500)
 }
 const destroyScene = () => {
@@ -792,7 +791,6 @@ const forwardExhibit = () => {
 // Main loop
 //
 const threeTick = () => {
-	// console.log("A")
 	if (threeLoaded) {
 		const elapsedTime = clock.getElapsedTime()
 		TPF = Math.round((elapsedTime - last) * 100) / 100

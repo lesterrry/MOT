@@ -227,6 +227,22 @@ img, svg {
 	display: none;
 }
 
+.overlay.all-exhibits {
+/*	display: flex;*/
+	flex-direction: column;
+	gap: 10px;
+	z-index: 6;
+	padding: 20px;
+}
+
+.overlay.all-exhibits > * {
+	color: white;
+}
+
+.overlay.all-exhibits div {
+	background-color: cyan;
+}
+
 .button {
 	position: relative;
 	background-color: white;
