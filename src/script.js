@@ -88,7 +88,7 @@ const EXHIBITS = [
 		true,
 		null, 
 		'Прототип A/3841-M', 
-		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени.', 
+		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени. В тестовой камере с часами-радио устройство, получающее питание от собственного ядерного реактора, смогло замедлить время ровно в полтора раза.', 
 		'/3d/Reactor_v0.fbx', 
 		[],
 		new Camera (
@@ -202,7 +202,7 @@ const EXHIBITS = [
 		true,
 		null, 
 		'Skip Model C200', 
-		'Первая модель, которую поступала в розничную продажу и стала доступна людям — Model C200. Несмотря на стоимость, сравнимую с двумя Bentley Continental GT, спрос на прибор зашкаливал, ведь он предоставлял каждому уникальную возможность исказить время. По текущим стандартам С200 был примитивным, позволяя только замедлять время и работая от автомобильного двигателя. Прорывным же была функция автоматического замедления, помогающая водителям избегать аварий.', 
+		'Первая модель, которая поступила в розничную продажу и стала доступна людям — Model C200. Несмотря на стоимость, сравнимую с двумя Bentley Continental GT, спрос на прибор зашкаливал, ведь он предоставлял каждому уникальную возможность исказить время. По текущим стандартам С200 был примитивным, позволяя только замедлять время и работая от автомобильного двигателя. Прорывным же была функция автоматического замедления, помогающая водителям избегать аварий.', 
 		'/3d/CarRadio_v1.fbx', 
 		[],
 		new Camera (
@@ -469,6 +469,7 @@ const overlayCloseButton = document.querySelector('.overlay.partial .button')
 const overlayDescription = document.querySelector('.overlay.partial p')
 const overlay = document.querySelector('.overlay.partial')
 const overlayWindow = document.querySelector('.overlay.partial .window')
+const allExhibitsOverlay = document.querySelector('.overlay.all-exhibits')
 const cornerTextLU = document.querySelector('.content h3#lu')
 const cornerTextRU = document.querySelector('.content h3#ru')
 const cornerTextLD = document.querySelector('.content h3#ld')
@@ -502,6 +503,7 @@ const exhibitProgressSubtitleTickMap = [
 const exhibitProgressSubtitleTickH = document.querySelector('.content .quest-progress .tick#h')
 const exhibitProgressSubtitleSpinner = document.querySelector('.content .quest-progress .spinner')
 const exhibitProgressNextButton = document.querySelector('.content .quest-progress .button')
+const buttons = document.querySelectorAll('.button')
 
 //
 // Events
@@ -568,6 +570,10 @@ relaunchButton.addEventListener('click', () => {
 	cookies.progress = '0'
 	window.location.reload();
 })
+exhibitsButton.addEventListener('click', () => {
+	destroyScene(false, true)
+	showAllExhibitsOverlay()
+})
 overlayCloseButton.addEventListener('click', () => {
 	hideOverlay(currentProgress[currentOverlayFocus])
 	currentProgress[currentOverlayFocus] = true
@@ -580,9 +586,18 @@ overlayCloseButton.addEventListener('click', () => {
 		loadTick(exhibitProgressSubtitleTickH)
 	}
 })
+
 exhibitProgressNextButton.addEventListener('click', () => {
-	if (finished) destroyScene()
+	if (finished) destroyScene(true)
 })
+
+// TODO:
+// for (var i = buttons.length - 1; i >= 0; i--) {
+// 	buttons[i].addEventListener('click', () => {
+// 		handleButtonClick(i)
+// 	})
+// }
+
 
 //
 // Lotties
@@ -632,6 +647,14 @@ const hideOverlay = (quiet) => {
 		exhibitProgressSubtitleMap[currentOverlayFocus].innerText = currentExhibit.pois[currentOverlayFocus].title
 		loadTick(exhibitProgressSubtitleTickMap[currentOverlayFocus])
 	}
+}
+const showAllExhibitsOverlay = () => {
+	allExhibitsOverlay.style['display'] = 'flex'
+	gsap.to(allExhibitsOverlay, { opacity: '100%', duration: 0.5, delay: 1 })
+}
+const hideAllExhibitsOverlay = () => {
+	gsap.to(allExhibitsOverlay, { opacity: '0%', duration: 0.5, delay: 0, clearProps: 'all' })
+	allExhibitsOverlay.style['display'] = 'none'
 }
 
 //
@@ -694,17 +717,20 @@ const prepareScene = (exhibit=currentExhibit) => {
 		loadScene(exhibit)
 	}, 500)
 }
-const destroyScene = () => {
+const destroyScene = (advance, hideLogo=false) => {
 	distract = true
 	exLink.style['pointer-events'] = 'none'
 	gsap.to(footer, { height: '100%', duration: 1 })
+	if (hideLogo) gsap.to(logo, { opacity: '0%', duration: 1 })
 	gsap.to(menu, { bottom: -20, duration: 0.5 })
 	setTimeout(() => {
 		deloadScene()
-		forwardExhibit()
 		currentOverlayFocus = 0
 		currentProgress = [false, false, false]
-		prepareScene()
+		if (advance) {
+			forwardExhibit()
+			prepareScene()
+		}
 	}, 1100)
 }
 const finalizeScene = () => {
@@ -713,6 +739,7 @@ const finalizeScene = () => {
 	// Wait for cursor movement to suppress initial model jump
 	gsap.to(footer, { height: 60, duration: 1, delay: 0.25 })
 	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 0 })
+	gsap.to(logo, { opacity: '100%', duration: 1, clearProps: 'all' })
 	setSpinner(false)
 	distract = false
 }
@@ -786,6 +813,9 @@ const forwardExhibit = () => {
 	currentExhibitIndex++
 	currentExhibit = EXHIBITS[currentExhibitIndex]
 }
+const handleButtonClick = (button) => {
+	console.log(button)
+}
 
 //
 // Main loop
@@ -835,6 +865,7 @@ const threeTick = () => {
 // Main flow
 //
 const flow = (rewind=false) => {
+	return
 	if (rewind) {
 		step3()
 	} else {

@@ -22,6 +22,10 @@ img, svg {
 	-webkit-user-select: none;
 }
 
+span.secondary.white {
+	color: gray;
+}
+
 @media all and (max-width: 800px), all and (max-height: 500px) {
 	body > .overlay.full {
 		display: initial;
@@ -200,16 +204,6 @@ img, svg {
 	width: 100%;
 }
 
-.overlay.partial img {
-	position: relative;
-	display: none;
-	height: 300px;
-	width: 300px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 14px;
-}
-
 .overlay.full h1 {
 	color: white;
 	font-size: 16px;
@@ -228,7 +222,8 @@ img, svg {
 }
 
 .overlay.all-exhibits {
-/*	display: flex;*/
+	display: flex;
+/*	opacity: 0%;*/
 	flex-direction: column;
 	gap: 10px;
 	z-index: 6;
@@ -239,16 +234,51 @@ img, svg {
 	color: white;
 }
 
-.overlay.all-exhibits div {
-	background-color: cyan;
+.overlay.all-exhibits > div {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
-.button {
+.overlay.all-exhibits .data {
+	display: flex;
+	align-items: center;
+	gap: 40px;
+}
+
+.overlay.all-exhibits img {
+	height: 100px;
+	border-radius: 16px;
+}
+
+.overlay.all-exhibits h1 {
+
+}
+
+.overlay.all-exhibits h3 {
+
+}
+
+.overlay.all-exhibits h4 {
+
+}
+
+.button.wide {
 	position: relative;
 	background-color: white;
 	height: 40px;
 	margin-top: 16px;
 	padding: 12px;
+}
+
+.button.fixed {
+	position: relative;
+	background-color: white;
+	height: 40px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	padding-left: 68px;
+	padding-right: 68px;
 }
 
 .button:hover {
