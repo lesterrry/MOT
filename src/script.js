@@ -669,7 +669,7 @@ const setExhibitProgressButton = (visible, compact, animate) => {
 		if (animate) {
 			gsap.to(exhibitProgress, { height: 188, duration: 0.5 })
 		} else {
-			exhibitProgress.style['height'] = '	188'
+			exhibitProgress.style['height'] = '188'
 		}
 	}
 }
