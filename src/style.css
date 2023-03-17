@@ -22,10 +22,6 @@ img, svg {
 	-webkit-user-select: none;
 }
 
-.secondary-text.white {
-	color: gray;
-}
-
 @media all and (max-width: 800px), all and (max-height: 500px) {
 	body > .overlay.full {
 		display: initial;

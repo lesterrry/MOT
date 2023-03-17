@@ -656,6 +656,9 @@ const hideAllExhibitsOverlay = () => {
 	gsap.to(allExhibitsOverlay, { opacity: '0%', duration: 0.5, delay: 0, clearProps: 'all' })
 	allExhibitsOverlay.style['display'] = 'none'
 }
+const populateAllExhibitsOverlay = () => {
+	const template = '<div><div class="data"><img src="../static/img/exhibits/p1.png"><div><h3>MOT — EXHIBIT #4924</h3><h1>Ожидатель</h1></div></div><div id="1" class="button fixed"><h4>Перейти</h4></div></div>'
+}
 
 //
 // Initial spinner
