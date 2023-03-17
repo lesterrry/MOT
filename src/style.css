@@ -22,7 +22,7 @@ img, svg {
 	-webkit-user-select: none;
 }
 
-span.secondary.white {
+.secondary-text.white {
 	color: gray;
 }
 
@@ -228,7 +228,10 @@ span.secondary.white {
 	align-items: flex-end;
 	gap: 24px;
 	z-index: 6;
-	padding: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-right: 26px;
+	padding-left: 26px;
 }
 
 .overlay.all-exhibits > * {
@@ -245,7 +248,7 @@ span.secondary.white {
 .overlay.all-exhibits .data {
 	display: flex;
 	align-items: center;
-	gap: 40px;
+	gap: 34px;
 }
 
 .overlay.all-exhibits img {
@@ -253,20 +256,26 @@ span.secondary.white {
 	border-radius: 16px;
 }
 
-.overlay.all-exhibits .close {
-	width: initial;
-}
-
 .overlay.all-exhibits h1 {
-	font-size: 42px;
-	font-weight: 600;
+	font-size: 48px;
+	font-weight: 500;
 }
 
-.overlay.all-exhibits h2 {
-	width: 40px;
-	font-size: 42px;
-	font-weight: 600;
-	margin-right: 0;
+.overlay.all-exhibits .close h2 {
+	font-size: 36px;
+	font-weight: 400;
+	color: gray;
+	cursor: pointer;
+}
+
+.overlay.all-exhibits .close h2:hover {
+	color: white;
+}
+
+.overlay.all-exhibits .close h1 {
+	font-size: 36px;
+	font-weight: 400;
+	color: gray;
 }
 
 .overlay.all-exhibits h3 {
@@ -288,8 +297,8 @@ span.secondary.white {
 	height: 40px;
 	padding-top: 12px;
 	padding-bottom: 12px;
-	padding-left: 68px;
-	padding-right: 68px;
+	padding-left: 88px;
+	padding-right: 88px;
 }
 
 .button:hover {
