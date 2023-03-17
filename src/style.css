@@ -225,7 +225,8 @@ span.secondary.white {
 	display: flex;
 /*	opacity: 0%;*/
 	flex-direction: column;
-	gap: 10px;
+	align-items: flex-end;
+	gap: 24px;
 	z-index: 6;
 	padding: 20px;
 }
@@ -238,6 +239,7 @@ span.secondary.white {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	width: 100%;
 }
 
 .overlay.all-exhibits .data {
@@ -251,16 +253,25 @@ span.secondary.white {
 	border-radius: 16px;
 }
 
-.overlay.all-exhibits h1 {
+.overlay.all-exhibits .close {
+	width: initial;
+}
 
+.overlay.all-exhibits h1 {
+	font-size: 42px;
+	font-weight: 600;
+}
+
+.overlay.all-exhibits h2 {
+	width: 40px;
+	font-size: 42px;
+	font-weight: 600;
+	margin-right: 0;
 }
 
 .overlay.all-exhibits h3 {
-
-}
-
-.overlay.all-exhibits h4 {
-
+	font-size: 14px;
+	font-weight: 400;
 }
 
 .button.wide {
