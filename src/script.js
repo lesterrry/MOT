@@ -657,7 +657,7 @@ const hideAllExhibitsOverlay = () => {
 	allExhibitsOverlay.style['display'] = 'none'
 }
 const populateAllExhibitsOverlay = () => {
-	const template = '<div><div class="data"><img src="../static/img/exhibits/p1.png"><div><h3>MOT — EXHIBIT #4924</h3><h1>Ожидатель</h1></div></div><div id="1" class="button fixed"><h4>Перейти</h4></div></div>'
+	const template = '<div><div class="data"><img src="../static/img/exhibits/%PIC%.png"><div><h3>MOT — EXHIBIT #4924</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Перейти</h4></div></div>'
 }
 
 //
