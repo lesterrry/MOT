@@ -503,7 +503,6 @@ const exhibitProgressSubtitleTickMap = [
 const exhibitProgressSubtitleTickH = document.querySelector('.content .quest-progress .tick#h')
 const exhibitProgressSubtitleSpinner = document.querySelector('.content .quest-progress .spinner')
 const exhibitProgressNextButton = document.querySelector('.content .quest-progress .button')
-const buttons = document.querySelectorAll('.button')
 
 //
 // Events
@@ -547,13 +546,18 @@ window.addEventListener('mousemove', (event) => {
 	}
 	// console.log(cursor.x.balanced, cursor.y.center)
 })
-window.addEventListener('click', () => {
+window.addEventListener('click', (event) => {
 	if (cursor.focus !== false && !distract) {
 		currentOverlayFocus = cursor.focus
 		showOverlay(currentExhibit.pois[cursor.focus])
 		cursor.focus = false
 		setCursor(false)
 	}
+	if (true) {
+		console.log(event.target.classList.contains('clickable'))
+		console.log(event.target.classList)
+	}
+
 })
 window.addEventListener('load', () => {
 	if (!deserializeCookies()) {
@@ -590,14 +594,6 @@ overlayCloseButton.addEventListener('click', () => {
 exhibitProgressNextButton.addEventListener('click', () => {
 	if (finished) destroyScene(true)
 })
-
-// TODO:
-// for (var i = buttons.length - 1; i >= 0; i--) {
-// 	buttons[i].addEventListener('click', () => {
-// 		handleButtonClick(i)
-// 	})
-// }
-
 
 //
 // Lotties
