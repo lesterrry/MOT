@@ -234,7 +234,7 @@ img, svg {
 	color: white;
 }
 
-.overlay.all-exhibits > div {
+.overlay.all-exhibits .close, .overlay.all-exhibits .stuff {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

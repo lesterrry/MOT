@@ -503,7 +503,7 @@ const exhibitProgressSubtitleTickMap = [
 const exhibitProgressSubtitleTickH = document.querySelector('.content .quest-progress .tick#h')
 const exhibitProgressSubtitleSpinner = document.querySelector('.content .quest-progress .spinner')
 const exhibitProgressNextButton = document.querySelector('.content .quest-progress .button')
-const buttons = document.querySelectorAll('.button')
+const buttons = document.querySelectorAll('.clickable')
 
 //
 // Events
@@ -592,11 +592,11 @@ exhibitProgressNextButton.addEventListener('click', () => {
 })
 
 // TODO:
-// for (var i = buttons.length - 1; i >= 0; i--) {
-// 	buttons[i].addEventListener('click', () => {
-// 		handleButtonClick(i)
-// 	})
-// }
+for (var i = buttons.length - 1; i >= 0; i--) {
+	buttons[i].addEventListener('click', () => {
+		handleButtonClick(i)
+	})
+}
 
 
 //
