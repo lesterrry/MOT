@@ -6,15 +6,22 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 
+import PNG_P1 from '../static/img/exhibits/p1.png'
+import PNG_P2 from '../static/img/exhibits/p2.png'
+import PNG_P3 from '../static/img/exhibits/p3.png'
+import PNG_P4 from '../static/img/exhibits/p4.png'
+import PNG_P5 from '../static/img/exhibits/p5.png'
+
 //
-// Exhibits
+// Classes
 //
 class Exhibit {
-	constructor(is_artifact, index, title, description, model, pois, camera) {
+	constructor(is_artifact, index, title, description, image, model, pois, camera) {
 		this.is_artifact = is_artifact
 		this.index = index
 		this.title = title
 		this.description = description
+		this.image = image
 		this.model = model
 		this.pois = pois
 		this.camera = camera
@@ -45,12 +52,20 @@ class Camera {
 //
 // Globals
 //
+const imageMap = {
+	'p1': PNG_P1,
+	'p2': PNG_P2,
+	'p3': PNG_P3,
+	'p4': PNG_P4,
+	'p5': PNG_P5,
+}
 const EXHIBITS = [
 	new Exhibit (
 		false,
-		null, 
+		'2803', 
 		'Первый прорыв', 
 		'Эти древние цифровые часы с радио — объект многолетних лабораторных тестов. Именно на них впервые получилось удачно провести эксперимент по изменению течения времени.', 
+		'p5',
 		'/3d/Clock_v0.fbx', 
 		[
 			new Poi (
@@ -86,9 +101,10 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		true,
-		null, 
+		'null', 
 		'Прототип A/3841-M', 
 		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени. В тестовой камере с часами-радио устройство, получающее питание от собственного ядерного реактора, смогло замедлить время ровно в полтора раза.', 
+		null,
 		'/3d/Reactor_v0.fbx', 
 		[],
 		new Camera (
@@ -105,9 +121,10 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		false,
-		null, 
+		'8541', 
 		'Ожидатель', 
 		'“Ожидатель” представляет собой репродукцию знаменитой скульптуры родена “мыслитель”, созданную около ста лет назад. это образ человека, утомленного ожиданием — типичное зрелище для XXI века.', 
+		'p1',
 		'/3d/Thinker_v9.fbx', 
 		[
 			new Poi (
@@ -146,6 +163,7 @@ const EXHIBITS = [
 		null, 
 		'Skip Model H3000', 
 		'Model H3000 — первое устройство компании, которое начали массово выпускать. Массивная установка, потребляющая огромное количество энергии, стоила как 5 самолетов Boeing 737-800. Именно в аэропортах впервые и появились эти машины, сделав ожидание людей в залах более приятным.', 
+		null,
 		'/3d/Charger_v1.fbx', 
 		[],
 		new Camera (
@@ -162,9 +180,10 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		false,
-		null, 
+		'1210', 
 		'Автокатастрофа', 
 		'Этот экспонат — один из новых. Он показывает столкновение двух автомобилей — "Аварию". До открытия ускорения времени люди постоянно торопились и нередко погибали в спешке.', 
+		'p3',
 		'/3d/Crash_v1.fbx', 
 		[
 			new Poi (
@@ -203,6 +222,7 @@ const EXHIBITS = [
 		null, 
 		'Skip Model C200', 
 		'Первая модель, которая поступила в розничную продажу и стала доступна людям — Model C200. Несмотря на стоимость, сравнимую с двумя Bentley Continental GT, спрос на прибор зашкаливал, ведь он предоставлял каждому уникальную возможность исказить время. По текущим стандартам С200 был примитивным, позволяя только замедлять время и работая от автомобильного двигателя. Прорывным же была функция автоматического замедления, помогающая водителям избегать аварий.', 
+		null,
 		'/3d/CarRadio_v1.fbx', 
 		[],
 		new Camera (
@@ -219,9 +239,10 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		false,
-		null, 
+		'0686', 
 		'Эконом-класс', 
 		'Перед нами ценнейшая древность — кресла самолета эконом-класса. В прошлом люди проводили мучительно долгие часы, сидя в неудобных, жестких сидениях с крошечным пространством для ног. К счастью, эти муки потеряли актуальность много десятилетий назад, и теперь даже трансатлантический перелет занимает не более пяти минут.', 
+		'p2',
 		'/3d/Seats_v1.fbx', 
 		[
 			new Poi (
@@ -260,6 +281,7 @@ const EXHIBITS = [
 		null, 
 		'Skip Model M', 
 		'M means Mobile — слоган рекламной кампании из 2028. Лучше и не скажешь: инженерам удалось значительно уменьшить энергопотребление временных контуров, сделав возможным работу устройства от аккумулятора. Именно это устройство наконец позволило людям взять изменение времени с собой, и несмотря на огромные размеры и низкую автономность (Model M мог запускать процесс изменения времени не более 7 раз от одного заряда), оно стало настоящим публичным хитом.', 
+		null,
 		'/3d/Phone_v1.fbx', 
 		[],
 		new Camera (
@@ -276,9 +298,10 @@ const EXHIBITS = [
 	),
 	new Exhibit (
 		false,
-		null, 
+		'9801', 
 		'Журавлик оригами', 
 		'Еще одна реликвия, датированная 2023 годом: напоминание о том, к каким занятиям прибегали люди из прошлого, стараясь развлечь себя в ежедневных ожиданиях. Кроме оригами к таковым можно отнести вязание, сканворды и судоку. Это все, конечно, если под рукой не окажется телефона.', 
+		'p4',
 		'/3d/Crane_v3.fbx', 
 		[
 			new Poi (
@@ -317,6 +340,7 @@ const EXHIBITS = [
 		null, 
 		'Skip Model A', 
 		'Венец творения — Model A помещается в карман, позволяя где угодно и сколько угодно манипулировать временем. В массовую продажу Model A поступил в 2115 году, и за несколько лет полностью изменил мир.', 
+		null,
 		'/3d/Hand_v1.fbx', 
 		[],
 		new Camera (
@@ -457,15 +481,10 @@ const cursorSub = document.querySelector('div.cursor-sub')
 const footer = document.querySelector('.frame-part#d')
 const menu = document.querySelector('div.menu')
 const logo = document.querySelector('div.logo')
-const relaunchButton = document.querySelector('a#relaunch')
-const exhibitsButton = document.querySelector('a#to-exhibits')
-const helpButton = document.querySelector('a#to-help')
-const aboutButton = document.querySelector('a#to-about')
 const initialSpinner = document.querySelector('.spinner#initial')
 const termText = document.querySelector('p.term')
 const exLink = document.querySelector('a.logo-link')
 const overlayTitle = document.querySelector('.overlay.partial h1')
-const overlayCloseButton = document.querySelector('.overlay.partial .button')
 const overlayDescription = document.querySelector('.overlay.partial p')
 const overlay = document.querySelector('.overlay.partial')
 const overlayWindow = document.querySelector('.overlay.partial .window')
@@ -503,7 +522,6 @@ const exhibitProgressSubtitleTickMap = [
 const exhibitProgressSubtitleTickH = document.querySelector('.content .quest-progress .tick#h')
 const exhibitProgressSubtitleSpinner = document.querySelector('.content .quest-progress .spinner')
 const exhibitProgressNextButton = document.querySelector('.content .quest-progress .button')
-const buttons = document.querySelectorAll('.clickable')
 
 //
 // Events
@@ -559,6 +577,13 @@ window.addEventListener('load', () => {
 	if (!deserializeCookies()) {
 		serializeCookies()
 	}
+	populateAllExhibitsOverlay()
+	const buttons = document.querySelectorAll('.clickable')
+	for (let i = buttons.length - 1; i >= 0; i--) {
+		buttons[i].addEventListener('click', () => {
+			handleButtonClick(i)
+		})
+	}
 	setSpinner(false)
 	threeTick()
 	setTimeout(() => { 
@@ -566,38 +591,30 @@ window.addEventListener('load', () => {
 		flow(cookies.progress != '0')
 	}, 1000)  // Delay for load-safety
 })
-relaunchButton.addEventListener('click', () => {
-	cookies.progress = '0'
-	window.location.reload();
-})
-exhibitsButton.addEventListener('click', () => {
-	destroyScene(false, true)
-	showAllExhibitsOverlay()
-})
-overlayCloseButton.addEventListener('click', () => {
-	hideOverlay(currentProgress[currentOverlayFocus])
-	currentProgress[currentOverlayFocus] = true
-	currentOverlayFocus = 0
-	if (array_true(currentProgress) && !finished) {
-		finished = true
-		exhibitProgressSubtitleSpinner.style['display'] = 'none'
-		exhibitProgressTitle.innerText = 'Все детали найдены'
-		setExhibitProgressButton(true, false, true)
-		loadTick(exhibitProgressSubtitleTickH)
-	}
-})
+// relaunchButton.addEventListener('click', () => {
+// 	cookies.progress = '0'
+// 	window.location.reload();
+// })
+// exhibitsButton.addEventListener('click', () => {
+// 	destroyScene(false, true)
+// 	showAllExhibitsOverlay()
+// })
+// overlayCloseButton.addEventListener('click', () => {
+// 	hideOverlay(currentProgress[currentOverlayFocus])
+// 	currentProgress[currentOverlayFocus] = true
+// 	currentOverlayFocus = 0
+// 	if (array_true(currentProgress) && !finished) {
+// 		finished = true
+// 		exhibitProgressSubtitleSpinner.style['display'] = 'none'
+// 		exhibitProgressTitle.innerText = 'Все детали найдены'
+// 		setExhibitProgressButton(true, false, true)
+// 		loadTick(exhibitProgressSubtitleTickH)
+// 	}
+// })
 
-exhibitProgressNextButton.addEventListener('click', () => {
-	if (finished) destroyScene(true)
-})
-
-// TODO:
-for (var i = buttons.length - 1; i >= 0; i--) {
-	buttons[i].addEventListener('click', () => {
-		handleButtonClick(i)
-	})
-}
-
+// exhibitProgressNextButton.addEventListener('click', () => {
+// 	if (finished) destroyScene(true)
+// })
 
 //
 // Lotties
@@ -657,7 +674,17 @@ const hideAllExhibitsOverlay = () => {
 	allExhibitsOverlay.style['display'] = 'none'
 }
 const populateAllExhibitsOverlay = () => {
-	const template = '<div><div class="data"><img src="../static/img/exhibits/%PIC%.png"><div><h3>MOT — EXHIBIT #4924</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Перейти</h4></div></div>'
+	const template = '<div class="stuff"><div class="data"><img src="%IMG%"><div><h3>MOT — EXHIBIT #%INDEX%</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Перейти</h4></div></div>'
+	let data = ['<div class="close"><h1>Все экспонаты</h1><div class="clickable"><h2 сlass="text-button">X</h2></div></div>']
+	for (let i = EXHIBITS.length - 1; i >= 0; i--) {
+		if (EXHIBITS[i].is_artifact) continue
+		let s = template.replace('%IMG%', imageMap[EXHIBITS[i].image])
+		s = s.replace('%INDEX%', EXHIBITS[i].index)
+		s = s.replace('%TITLE%', EXHIBITS[i].title)
+		s = s.replace('%BTN_INDEX%', i)
+		data.push(s)
+	}
+	allExhibitsOverlay.innerHTML = data.join('\n')
 }
 
 //
@@ -816,8 +843,8 @@ const forwardExhibit = () => {
 	currentExhibitIndex++
 	currentExhibit = EXHIBITS[currentExhibitIndex]
 }
-const handleButtonClick = (button) => {
-	console.log(button)
+const handleButtonClick = (id) => {
+	console.log(id)
 }
 
 //
