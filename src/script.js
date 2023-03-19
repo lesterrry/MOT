@@ -591,30 +591,43 @@ window.addEventListener('load', () => {
 		flow(cookies.progress != '0')
 	}, 1000)  // Delay for load-safety
 })
-// relaunchButton.addEventListener('click', () => {
-// 	cookies.progress = '0'
-// 	window.location.reload();
-// })
-// exhibitsButton.addEventListener('click', () => {
-// 	destroyScene(false, true)
-// 	showAllExhibitsOverlay()
-// })
-// overlayCloseButton.addEventListener('click', () => {
-// 	hideOverlay(currentProgress[currentOverlayFocus])
-// 	currentProgress[currentOverlayFocus] = true
-// 	currentOverlayFocus = 0
-// 	if (array_true(currentProgress) && !finished) {
-// 		finished = true
-// 		exhibitProgressSubtitleSpinner.style['display'] = 'none'
-// 		exhibitProgressTitle.innerText = 'Все детали найдены'
-// 		setExhibitProgressButton(true, false, true)
-// 		loadTick(exhibitProgressSubtitleTickH)
-// 	}
-// })
 
-// exhibitProgressNextButton.addEventListener('click', () => {
-// 	if (finished) destroyScene(true)
-// })
+const handleButtonClick = (id) => {
+	let substract = 6
+	console.log(id)
+	switch (id) {
+	case 0:  // relaunch
+		cookies.progress = '0'
+		window.location.reload()
+		break
+	case 1:  // all exhibits
+		destroyScene(false, true)
+		showAllExhibitsOverlay()
+		break
+	case 2:  // help
+		break
+	case 3:  // about
+		break
+	case 4:  // partial overlay close
+		hideOverlay(currentProgress[currentOverlayFocus])
+		currentProgress[currentOverlayFocus] = true
+		currentOverlayFocus = 0
+		if (array_true(currentProgress) && !finished) {
+			finished = true
+			exhibitProgressSubtitleSpinner.style['display'] = 'none'
+			exhibitProgressTitle.innerText = 'Все детали найдены'
+			setExhibitProgressButton(true, false, true)
+			loadTick(exhibitProgressSubtitleTickH)
+		}
+		break
+	case 5:  // all exhibits overlay close
+		hideAllExhibitsOverlay()
+		prepareScene()
+		break
+	case 11:  // next exhibit
+		if (finished) destroyScene(true)
+	}
+}
 
 //
 // Lotties
@@ -670,8 +683,9 @@ const showAllExhibitsOverlay = () => {
 	gsap.to(allExhibitsOverlay, { opacity: '100%', duration: 0.5, delay: 1 })
 }
 const hideAllExhibitsOverlay = () => {
-	gsap.to(allExhibitsOverlay, { opacity: '0%', duration: 0.5, delay: 0, clearProps: 'all' })
-	allExhibitsOverlay.style['display'] = 'none'
+	gsap.to(allExhibitsOverlay, { opacity: '0', duration: 0.5, delay: 0, clearProps: 'all', onComplete: () => {
+		allExhibitsOverlay.style['display'] = 'none'
+	} })
 }
 const populateAllExhibitsOverlay = () => {
 	const template = '<div class="stuff"><div class="data"><img src="%IMG%"><div><h3>MOT — EXHIBIT #%INDEX%</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Перейти</h4></div></div>'
@@ -830,7 +844,7 @@ const loadScene = (exhibit) => {
 }
 const deloadScene = () => {
 	threeLoaded = false
-	while(scene.children.length > 0){ 
+	while (scene.children.length > 0){ 
 		scene.remove(scene.children[0]); 
 	}
 }
@@ -842,9 +856,6 @@ const array_true = arr => arr.every(Boolean);
 const forwardExhibit = () => {
 	currentExhibitIndex++
 	currentExhibit = EXHIBITS[currentExhibitIndex]
-}
-const handleButtonClick = (id) => {
-	console.log(id)
 }
 
 //
@@ -895,7 +906,7 @@ const threeTick = () => {
 // Main flow
 //
 const flow = (rewind=false) => {
-	return
+	// return
 	if (rewind) {
 		step3()
 	} else {
