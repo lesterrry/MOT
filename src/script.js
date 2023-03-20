@@ -580,13 +580,19 @@ window.addEventListener('click', async () => {
 	await osc.start()
 	console.log('audio is ready')
 	if (cursor.focus !== false && !distract) {
+		synth.triggerAttackRelease('A3', '8n')
+		synth.triggerAttackRelease('A2', '8n', '+0.2')
+		synth.triggerAttackRelease('A4', '8n', '+0.4')
 		progressToBeSet = true
 		currentOverlayFocus = cursor.focus
 		showOverlay(currentExhibit.pois[cursor.focus])
 		cursor.focus = false
 		setCursor(false)
+	} else {
+		synth.triggerAttackRelease('A2', '8n')
 	}
 })
+
 window.addEventListener('load', () => {
 	if (!deserializeCookies()) {
 		serializeCookies()
@@ -609,6 +615,7 @@ window.addEventListener('load', () => {
 })
 
 const handleButtonClick = (id) => {
+	synth.triggerAttackRelease('A3', '8n', '+0.2')
 	let substract = 7
 	switch (id) {
 	case 0:  // relaunch
@@ -659,9 +666,9 @@ const handleButtonClick = (id) => {
 // Sound
 //
 const env = new TONE.AmplitudeEnvelope({
-	attack: 0.5,
+	attack: 0.1,
 	decay: 1,
-	sustain: 0.5,
+	sustain: 0.2,
 	release: 0.5
 }).toDestination()
 
@@ -669,8 +676,14 @@ const osc = new TONE.Oscillator({
 	partials: [1, 2, 3],
 	type: "custom",
 	frequency: "C#2",
-	volume: -8,
+	volume: -10,
 }).connect(env)
+
+const synth = new TONE.PolySynth(TONE.Synth, {
+	oscillator: {
+		partials: [0, 2, 3, 4],
+	}
+}).toDestination()
 
 //
 // Lotties
