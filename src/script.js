@@ -948,6 +948,27 @@ const setExhibit = (to, skipCookies=false) => {
 const conformMuteButton = () => {
 	buttons[2].innerText = cookies.mute ? 'Вкл. звук' : 'Выкл. звук'
 }
+const playRandomSequence = (times, offsetIncrement=0.1) => {
+	const generateNote = () => {
+		const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+		const nums = ['2', '3']
+		const letter = letters[Math.floor(Math.random() * letters.length)]
+		const num = nums[Math.floor(Math.random() * nums.length)]
+		return `${letter}${num}`
+	}
+	let offset = 0.0
+	for (var i = 0; i < times; i++) {
+		synth.triggerAttackRelease(generateNote(), '8n', `+${offset}`)
+		offset += offsetIncrement
+	}
+}
+const playSequence = (note, times, offsetIncrement=0.1) => {
+	let offset = 0.0
+	for (var i = 0; i < times; i++) {
+		synth.triggerAttackRelease(note, '8n', `+${offset}`)
+		offset += offsetIncrement
+	}
+}
 
 //
 // Main loop
@@ -1030,7 +1051,8 @@ const step1 = () => {
 		typeSpeed: 10,
 		startDelay: 1000,
 		onComplete: step2,
-		preStringTyped: () => { }
+		preStringTyped: () => {  },
+		onStringTyped: () => {  }
 	});
 }
 const step2 = () => {
@@ -1051,13 +1073,44 @@ const step2 = () => {
 		startDelay: 1000,
 		backSpeed: 2,
 		onComplete: () => { setTimeout(step3, 1000) },
-		preStringTyped: () => { }
+		preStringTyped: (array) => {
+			if (cookies.mute) return
+			switch (array) {
+			case 0:
+				playRandomSequence(6) 
+				break
+			case 1:
+				playRandomSequence(14)
+				break
+			case 2:
+				playRandomSequence(22)
+				break
+			case 3:
+				playRandomSequence(30)
+				break
+			}
+		},
+		onStringTyped: (array) => { 
+			if (cookies.mute) return
+			if (array == 3) {
+				setTimeout(() => playRandomSequence(10), 2000)
+				setTimeout(() => playRandomSequence(10), 4000)
+			}
+		}
 	});
 	cookies.progress = 1
 }
 const step3 = () => {
 	termText.innerHTML = ''
 	logoAnimation.playSegments([0, 9], true)
+	// TODO:
+	// ext func
+	if (!cookies.mute) {
+		synth.triggerAttackRelease('C4', '8n')
+		synth.triggerAttackRelease('E4', '8n', '+0.1')
+		synth.triggerAttackRelease('G4', '8n', '+0.2')
+		synth.triggerAttackRelease('B4', '8n', '+0.3')
+	}
 	setTimeout(() => {
 		prepareScene()
 	}, 500)
