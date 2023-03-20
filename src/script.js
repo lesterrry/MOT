@@ -672,14 +672,13 @@ const handleButtonClick = (id) => {
 // Sound
 //
 
-const osc = new TONE.Oscillator({
-	partialCount: 2,
-	type: "square",
-	frequency: 80,
-	volume: -8,
+const osc = new TONE.FatOscillator({
+	type: "sine2",
+	frequency: 100,
+	volume: -22
 }).toDestination()
-const volume = new TONE.Signal(-8);
-volume.connect(osc.volume)
+const volume = new TONE.Signal(120);
+volume.connect(osc.frequency)
 
 const synth = new TONE.PolySynth(TONE.Synth, {
 	oscillator: {
@@ -969,8 +968,10 @@ const threeTick = () => {
 			// osc.stop()
 			// attacking = false
 		}
+		let x = 100 + (0.75 * (Math.abs(Math.round(cursor.x.corner - cursor.x.cornerCurrent))))
+		console.log(x)
 
-		volume.rampTo(-cursor.x.corner, 0.1)
+		volume.rampTo(x, 0.1)
 
 		s['transform'] = t
 		s['webkitTransform'] = t
