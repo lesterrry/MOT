@@ -659,16 +659,16 @@ const handleButtonClick = (id) => {
 // Sound
 //
 const env = new TONE.AmplitudeEnvelope({
-	attack: 1,
-	decay: 0.2,
+	attack: 0.5,
+	decay: 1,
 	sustain: 0.5,
-	release: 0.7
+	release: 0.5
 }).toDestination()
 
 const osc = new TONE.Oscillator({
-	partials: [3, 2, 1],
+	partials: [1, 2, 3],
 	type: "custom",
-	frequency: "C#4",
+	frequency: "C#2",
 	volume: -8,
 }).connect(env)
 
