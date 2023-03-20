@@ -977,9 +977,21 @@ const threeTick = () => {
 
 		if (logo.matches(":hover") != logoHover) {
 			if (logoHover) {
+				if (!cookies.mute) {
+					synth.triggerAttackRelease('B3', '8n')
+					synth.triggerAttackRelease('A3', '8n', '+0.1')
+					synth.triggerAttackRelease('G3', '8n', '+0.2')
+					synth.triggerAttackRelease('F3', '8n', '+0.3')
+				}
 				logoAnimation.setDirection(-1)
 				logoAnimation.play()
 			} else {
+				if (!cookies.mute) {
+					synth.triggerAttackRelease('F3', '8n')
+					synth.triggerAttackRelease('G3', '8n', '+0.1')
+					synth.triggerAttackRelease('A3', '8n', '+0.2')
+					synth.triggerAttackRelease('B3', '8n', '+0.3')
+				}
 				if (logoAnimationNormalized) {
 					logoAnimation.setDirection(1)
 					logoAnimation.play()
