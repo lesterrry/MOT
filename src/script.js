@@ -780,7 +780,7 @@ const destroyScene = (advance, hideLogo=false) => {
 	distract = true
 	exLink.style['pointer-events'] = 'none'
 	gsap.to(footer, { height: '100%', duration: 1 })
-	if (hideLogo) gsap.to(logo, { opacity: '0%', duration: 1 })
+	if (hideLogo) gsap.to(logo, { opacity: '0', duration: 0.5 })
 	gsap.to(menu, { bottom: -20, duration: 0.5 })
 	setTimeout(() => {
 		deloadScene()
@@ -798,7 +798,7 @@ const finalizeScene = () => {
 	// Wait for cursor movement to suppress initial model jump
 	gsap.to(footer, { height: 60, duration: 1, delay: 0.25 })
 	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 0 })
-	gsap.to(logo, { opacity: '100%', duration: 1, clearProps: 'all' })
+	if (logo.style['opacity'] == '0') { gsap.to(logo, { opacity: '100%', duration: 1, clearProps: 'all' }) }
 	setSpinner(false)
 	distract = false
 }

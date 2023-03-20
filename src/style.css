@@ -145,6 +145,7 @@ img, svg {
 }
 
 .logo {
+	opacity: 100%;
 	z-index: 5;
 	position: absolute;
 	top: 0;
