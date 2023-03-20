@@ -427,6 +427,7 @@ let last = 0
 let logoHover = false
 let logoAnimationNormalized = false
 let threeLoaded = false
+let buttons = []
 
 // 
 // Cookie handling
@@ -434,10 +435,13 @@ let threeLoaded = false
 let cookies = {
 	_progress: 0,
 	_sessionID: String(Math.round(Math.random() * 10000)),
+	_mute: false,
 	get progress() { return this._progress },
 	set progress(value) { this._progress = value; serializeCookies() },
 	get sessionID() { return this._sessionID },
 	set sessionID(value) { this._sessionID = value; serializeCookies() },
+	get mute() { return this._mute },
+	set mute(value) { this._mute = value; serializeCookies() },
 }
 const createCookie = (name, value) => {
 	document.cookie = name + '=' + value + '; expires=;' + ' path=/';
@@ -522,7 +526,6 @@ const exhibitProgressSubtitleTickMap = [
 ]
 const exhibitProgressSubtitleTickH = document.querySelector('.content .quest-progress .tick#h')
 const exhibitProgressSubtitleSpinner = document.querySelector('.content .quest-progress .spinner')
-const exhibitProgressNextButton = document.querySelector('.content .quest-progress .button')
 
 //
 // Events
@@ -581,12 +584,13 @@ window.addEventListener('load', () => {
 	}
 	populateAllExhibitsOverlay()
 	setExhibit(cookies.progress == 0 ? 0 : cookies.progress - 1, true)
-	const buttons = document.querySelectorAll('.clickable')
+	buttons = document.querySelectorAll('.clickable')
 	for (let i = buttons.length - 1; i >= 0; i--) {
 		buttons[i].addEventListener('click', () => {
 			handleButtonClick(i)
 		})
 	}
+	conformMuteButton()
 	setSpinner(false)
 	threeTick()
 	setTimeout(() => { 
@@ -597,7 +601,6 @@ window.addEventListener('load', () => {
 
 const handleButtonClick = (id) => {
 	let substract = 7
-	console.log(id)
 	switch (id) {
 	case 0:  // relaunch
 		cookies.progress = 0
@@ -608,6 +611,8 @@ const handleButtonClick = (id) => {
 		showAllExhibitsOverlay()
 		break
 	case 2:  // mute
+		cookies.mute = !cookies.mute
+		conformMuteButton()
 		break
 	case 3:  // help
 		showOverlay(['Что делать', 'МУВР — музей времени. Здесь представлены экспонаты, олицетворяющее ту или иную трудность, с которой сталкивались люди до изобретения технологии изменения времени. За каждым экспонатом стоит свой артефакт — прибор «скип». Чтобы его разблокировать, изучайте экспонат курсором, пока он не изменит свое состояние, после чего нажмите на обнаруженную деталь.'])
@@ -883,6 +888,9 @@ const setExhibit = (to, skipCookies=false) => {
 	currentExhibitIndex = to
 	currentExhibit = EXHIBITS[currentExhibitIndex]
 	if (!skipCookies) cookies.progress = to + 1
+}
+const conformMuteButton = () => {
+	buttons[2].innerText = cookies.mute ? 'Вкл. звук' : 'Выкл. звук'
 }
 
 //
