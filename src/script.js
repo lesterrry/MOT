@@ -581,9 +581,6 @@ window.addEventListener('mousemove', (event) => {
 window.addEventListener('click', async () => {
 	if (!started) {
 		await TONE.start()
-		if (!cookies.mute) {
-			await osc.start()
-		}
 		threeTick()
 		initialSpinner.style['top'] = '80px'
 		flow(cookies.progress != 0)
@@ -866,6 +863,9 @@ const finalizeScene = () => {
 	distract = false
 }
 const loadScene = (exhibit) => {
+	if (!cookies.mute) {
+		osc.start()
+	}
 	finished = exhibit.is_artifact ? true : false
 	cursorSub.style['background-color'] = exhibit.is_artifact ? 'white' : 'black'
 	cursorSub.style['border-color'] = exhibit.is_artifact ? 'white' : 'black'
