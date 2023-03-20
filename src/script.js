@@ -581,7 +581,9 @@ window.addEventListener('mousemove', (event) => {
 window.addEventListener('click', async () => {
 	if (!started) {
 		await TONE.start()
-		await osc.start()
+		if (!cookies.mute) {
+			await osc.start()
+		}
 		threeTick()
 		initialSpinner.style['top'] = '80px'
 		flow(cookies.progress != 0)
@@ -590,16 +592,20 @@ window.addEventListener('click', async () => {
 		return
 	}
 	if (cursor.focus !== false && !distract) {
-		synth.triggerAttackRelease('A3', '8n')
-		synth.triggerAttackRelease('A2', '8n', '+0.2')
-		synth.triggerAttackRelease('A4', '8n', '+0.4')
+		if (!cookies.mute) {
+			synth.triggerAttackRelease('A3', '8n')
+			synth.triggerAttackRelease('A2', '8n', '+0.2')
+			synth.triggerAttackRelease('A4', '8n', '+0.4')
+		}
 		progressToBeSet = true
 		currentOverlayFocus = cursor.focus
 		showOverlay(currentExhibit.pois[cursor.focus])
 		cursor.focus = false
 		setCursor(false)
 	} else {
-		synth.triggerAttackRelease('A2', '8n')
+		if (!cookies.mute) {
+			synth.triggerAttackRelease('A2', '8n')
+		}
 	}
 })
 
@@ -634,6 +640,7 @@ const handleButtonClick = (id) => {
 		break
 	case 2:  // mute
 		cookies.mute = !cookies.mute
+		cookies.mute ? osc.stop() : osc.start()
 		conformMuteButton()
 		break
 	case 3:  // help
@@ -671,7 +678,6 @@ const handleButtonClick = (id) => {
 //
 // Sound
 //
-
 const osc = new TONE.FatOscillator({
 	type: "sine2",
 	frequency: 100,
@@ -961,16 +967,7 @@ const threeTick = () => {
 		const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
 		let s = cursorSub.style
 
-		if (attacking &&
-			Math.round(cursor.x.corner - cursor.x.cornerCurrent) == 0 &&
-			Math.round(cursor.y.corner - cursor.y.cornerCurrent) == 0
-			) { 
-			// osc.stop()
-			// attacking = false
-		}
 		let x = 100 + (0.75 * (Math.abs(Math.round(cursor.x.corner - cursor.x.cornerCurrent))))
-		console.log(x)
-
 		volume.rampTo(x, 0.1)
 
 		s['transform'] = t
