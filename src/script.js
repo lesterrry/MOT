@@ -419,6 +419,7 @@ let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
 let currentOverlayFocus = 0
 let currentProgress = [false, false, false]
+let progressToBeSet = false
 let finished = false
 const clock = new THREE.Clock()
 let TPF = 0
@@ -432,7 +433,7 @@ let threeLoaded = false
 //
 let cookies = {
 	_progress: '0',
-	_sessionID: String(Math.random()),
+	_sessionID: String(Math.round(Math.random() * 10000)),
 	get progress() { return this._progress },
 	set progress(value) { this._progress = value; serializeCookies() },
 	get sessionID() { return this._sessionID },
@@ -490,12 +491,10 @@ const overlay = document.querySelector('.overlay.partial')
 const overlayWindow = document.querySelector('.overlay.partial .window')
 const allExhibitsOverlay = document.querySelector('.overlay.all-exhibits')
 const cornerTextLU = document.querySelector('.content h3#lu')
-const cornerTextRU = document.querySelector('.content h3#ru')
 const cornerTextLD = document.querySelector('.content h3#ld')
 const cornerTextRD = document.querySelector('.content h3#rd')
 const cornerTextMap = [
 	cornerTextLU,
-	cornerTextRU,
 	cornerTextLD,
 	cornerTextRD
 ]
@@ -567,6 +566,7 @@ window.addEventListener('mousemove', (event) => {
 })
 window.addEventListener('click', () => {
 	if (cursor.focus !== false && !distract) {
+		progressToBeSet = true
 		currentOverlayFocus = cursor.focus
 		showOverlay(currentExhibit.pois[cursor.focus])
 		cursor.focus = false
@@ -593,7 +593,7 @@ window.addEventListener('load', () => {
 })
 
 const handleButtonClick = (id) => {
-	let substract = 6
+	let substract = 7
 	console.log(id)
 	switch (id) {
 	case 0:  // relaunch
@@ -604,12 +604,17 @@ const handleButtonClick = (id) => {
 		destroyScene(false, true)
 		showAllExhibitsOverlay()
 		break
-	case 2:  // help
+	case 2:  // mute
 		break
-	case 3:  // about
+	case 3:  // help
+		showOverlay(['Что делать', 'МУВР — музей времени. Здесь представлены экспонаты, олицетворяющее ту или иную трудность, с которой сталкивались люди до изобретения технологии изменения времени. За каждым экспонатом стоит свой артефакт — прибор «скип». Чтобы его разблокировать, изучайте экспонат курсором, пока он не изменит свое состояние, после чего нажмите на обнаруженную деталь.'])
 		break
-	case 4:  // partial overlay close
-		hideOverlay(currentProgress[currentOverlayFocus])
+	case 4:  // next exhibit
+		if (finished) destroyScene(true)
+		break
+	case 5:  // partial overlay close
+		hideOverlay(currentProgress[currentOverlayFocus] || !progressToBeSet)
+		if (!progressToBeSet) return
 		currentProgress[currentOverlayFocus] = true
 		currentOverlayFocus = 0
 		if (array_true(currentProgress) && !finished) {
@@ -619,13 +624,18 @@ const handleButtonClick = (id) => {
 			setExhibitProgressButton(true, false, true)
 			loadTick(exhibitProgressSubtitleTickH)
 		}
+		progressToBeSet = false
 		break
-	case 5:  // all exhibits overlay close
+	case 6:  // all exhibits overlay close
 		hideAllExhibitsOverlay()
 		prepareScene()
 		break
-	case 11:  // next exhibit
-		if (finished) destroyScene(true)
+	default:  // all exhibits buttons
+		id -= substract
+		currentExhibitIndex = id * 2
+		currentExhibit = EXHIBITS[currentExhibitIndex]
+		hideAllExhibitsOverlay()
+		prepareScene()
 	}
 }
 
@@ -663,9 +673,14 @@ const setCursor = (focused) => {
 //
 // Overlay
 //
-const showOverlay = (poi) => {
-	overlayTitle.innerText = poi.title
-	overlayDescription.innerText = poi.description
+const showOverlay = (data) => {
+	if (!Array.isArray(data)) {
+		overlayTitle.innerText = data.title
+		overlayDescription.innerText = data.description
+	} else {
+		overlayTitle.innerText = data[0]
+		overlayDescription.innerText = data[1]
+	}
 	overlay.style['display'] = 'initial'
 	gsap.from(overlayWindow, { height: 0, duration: 0.5, clearProps: 'all' })
 	distract = true
@@ -690,7 +705,7 @@ const hideAllExhibitsOverlay = () => {
 const populateAllExhibitsOverlay = () => {
 	const template = '<div class="stuff"><div class="data"><img src="%IMG%"><div><h3>MOT — EXHIBIT #%INDEX%</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Перейти</h4></div></div>'
 	let data = ['<div class="close"><h1>Все экспонаты</h1><div class="clickable"><h2 сlass="text-button">X</h2></div></div>']
-	for (let i = EXHIBITS.length - 1; i >= 0; i--) {
+	for (let i = 0; i < EXHIBITS.length - 1; i++) {
 		if (EXHIBITS[i].is_artifact) continue
 		let s = template.replace('%IMG%', imageMap[EXHIBITS[i].image])
 		s = s.replace('%INDEX%', EXHIBITS[i].index)
@@ -794,6 +809,9 @@ const loadScene = (exhibit) => {
 	cornerTextMap.map((item) => {
 		item.style['display'] = exhibit.is_artifact ? 'none' : ''
 	})
+	cornerTextLU.innerText = `MOT — EXHIBIT #${exhibit.index}`
+	cornerTextLD.innerText = `SESSION #${cookies.sessionID}\n192.168.31.232`
+	cornerTextRD.innerText = `${(new Date()).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n Year 21${(new Date()).toLocaleDateString('en-US', { year: '2-digit' })}`
 	exhibitTitle.innerText = exhibit.title
 	exhibitTitle.style['color'] = exhibit.is_artifact ? 'white' : 'black'
 	exhibitDescription.innerText = exhibit.description
@@ -808,6 +826,7 @@ const loadScene = (exhibit) => {
 	exhibitProgressSubtitleTickH.innerHTML = ''
 	setExhibitProgressButton(exhibit.is_artifact, exhibit.is_artifact, false)
 	exhibitProgressSubtitleSpinner.style['display'] = exhibit.is_artifact ? 'none' : ''
+
 	camera.position.set(0, 0, exhibit.camera.zPosition)
 	scene.add(camera)
 
