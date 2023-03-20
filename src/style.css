@@ -169,6 +169,19 @@ img, svg {
 	background-color: black;
 }
 
+.overlay.full p {
+	color: white;
+	font-size: 16px;
+	position: absolute;
+	text-align: center;
+	margin: auto auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 18px;
+}
+
 .overlay.partial {
 	z-index: 6;
 	background-color: rgba(0, 0, 0, 0.5);
@@ -200,23 +213,6 @@ img, svg {
 	margin-top: 10px;
 	font-weight: 400;
 	width: 100%;
-}
-
-.overlay.full h1 {
-	color: white;
-	font-size: 16px;
-	position: absolute;
-	text-align: center;
-	margin: auto auto;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 18px;
-}
-
-.overlay.full .button {
-	display: none;
 }
 
 .overlay.all-exhibits {
@@ -259,18 +255,18 @@ img, svg {
 	font-weight: 500;
 }
 
-.overlay.all-exhibits .close h2 {
+.overlay .close h2 {
 	font-size: 36px;
 	font-weight: 400;
 	color: gray;
 	cursor: pointer;
 }
 
-.overlay.all-exhibits .close h2:hover {
+.overlay .close h2:hover {
 	color: white;
 }
 
-.overlay.all-exhibits .close h1 {
+.overlay .close h1 {
 	font-size: 36px;
 	font-weight: 400;
 	color: gray;
