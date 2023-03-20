@@ -627,7 +627,9 @@ window.addEventListener('load', () => {
 })
 
 const handleButtonClick = (id) => {
-	synth.triggerAttackRelease('A3', '8n', '+0.2')
+	if (!cookies.mute) {
+		synth.triggerAttackRelease('A3', '8n', '+0.2')
+	}
 	let substract = 7
 	switch (id) {
 	case 0:  // relaunch
