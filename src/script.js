@@ -673,13 +673,13 @@ const handleButtonClick = (id) => {
 //
 const env = new TONE.AmplitudeEnvelope({
 	attack: 0.1,
-	decay: 1,
+	decay: 0.5,
 	sustain: 0.2,
-	release: 0.5
+	release: 1
 }).toDestination()
 
 const osc = new TONE.Oscillator({
-	partials: [1, 2, 3],
+	partials: [2, 3, 4],
 	type: "custom",
 	frequency: "C#2",
 	volume: -10,
@@ -967,11 +967,13 @@ const threeTick = () => {
 		let s = cursorSub.style
 
 		if (attacking &&
-			Math.round(cursor.x.corner - cursor.x.cornerCurrent) == 0 &&
-			Math.round(cursor.y.corner - cursor.y.cornerCurrent) == 0
+			Math.round(cursor.x.corner - cursor.x.cornerCurrent) < 3 &&
+			Math.round(cursor.y.corner - cursor.y.cornerCurrent) < 3
 			) { 
 			env.triggerRelease()
-			attacking = false
+			setTimeout(() => {
+				attacking = false
+			}, 200)
 		}
 
 		s['transform'] = t
