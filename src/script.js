@@ -5,6 +5,7 @@ import * as LOTTIE from 'lottie-web'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
+import * as TONE from 'tone'
 
 import PNG_P1 from '../static/img/exhibits/p1.png'
 import PNG_P2 from '../static/img/exhibits/p2.png'
@@ -414,6 +415,7 @@ let cursor = {
 }
 const client = window.navigator.userAgent
 const clueHuntOffset = 0.04
+const clock = new THREE.Clock()
 let currentExhibitIndex = 0
 let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
@@ -421,13 +423,13 @@ let currentOverlayFocus = 0
 let currentProgress = [false, false, false]
 let progressToBeSet = false
 let finished = false
-const clock = new THREE.Clock()
 let TPF = 0
 let last = 0
 let logoHover = false
 let logoAnimationNormalized = false
 let threeLoaded = false
 let buttons = []
+let attacking = false
 
 // 
 // Cookie handling
@@ -539,6 +541,10 @@ window.addEventListener('resize', () => {
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 window.addEventListener('mousemove', (event) => {
+	if (!attacking) {
+		env.triggerAttack()
+		attacking = true
+	}
 	cursor.x.corner = event.clientX - 11
 	cursor.y.corner = event.clientY - 11
 	cursor.x.center = event.clientX / sizes.width - 0.5
@@ -569,7 +575,10 @@ window.addEventListener('mousemove', (event) => {
 	}
 	// console.log(cursor.x.balanced, cursor.y.center)
 })
-window.addEventListener('click', () => {
+window.addEventListener('click', async () => {
+	await TONE.start()
+	await osc.start()
+	console.log('audio is ready')
 	if (cursor.focus !== false && !distract) {
 		progressToBeSet = true
 		currentOverlayFocus = cursor.focus
@@ -645,6 +654,23 @@ const handleButtonClick = (id) => {
 		prepareScene()
 	}
 }
+
+//
+// Sound
+//
+const env = new TONE.AmplitudeEnvelope({
+	attack: 1,
+	decay: 0.2,
+	sustain: 0.5,
+	release: 0.7
+}).toDestination()
+
+const osc = new TONE.Oscillator({
+	partials: [3, 2, 1],
+	type: "custom",
+	frequency: "C#4",
+	volume: -8,
+}).connect(env)
 
 //
 // Lotties
@@ -912,6 +938,14 @@ const threeTick = () => {
 		cursor.y.cornerCurrent += (cursor.y.corner - cursor.y.cornerCurrent) * (TPF * 10)
 		const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
 		let s = cursorSub.style
+
+		if (attacking &&
+			Math.round(cursor.x.corner - cursor.x.cornerCurrent) == 0 &&
+			Math.round(cursor.y.corner - cursor.y.cornerCurrent) == 0
+			) { 
+			env.triggerRelease()
+			attacking = false
+		}
 
 		s['transform'] = t
 		s['webkitTransform'] = t
