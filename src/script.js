@@ -432,7 +432,7 @@ let threeLoaded = false
 // Cookie handling
 //
 let cookies = {
-	_progress: '0',
+	_progress: 0,
 	_sessionID: String(Math.round(Math.random() * 10000)),
 	get progress() { return this._progress },
 	set progress(value) { this._progress = value; serializeCookies() },
@@ -578,6 +578,7 @@ window.addEventListener('load', () => {
 		serializeCookies()
 	}
 	populateAllExhibitsOverlay()
+	setExhibit(cookies.progress == 0 ? 0 : cookies.progress - 1, true)
 	const buttons = document.querySelectorAll('.clickable')
 	for (let i = buttons.length - 1; i >= 0; i--) {
 		buttons[i].addEventListener('click', () => {
@@ -588,7 +589,7 @@ window.addEventListener('load', () => {
 	threeTick()
 	setTimeout(() => { 
 		initialSpinner.style['top'] = '80px'
-		flow(cookies.progress != '0')
+		flow(cookies.progress != 0)
 	}, 1000)  // Delay for load-safety
 })
 
@@ -597,7 +598,7 @@ const handleButtonClick = (id) => {
 	console.log(id)
 	switch (id) {
 	case 0:  // relaunch
-		cookies.progress = '0'
+		cookies.progress = 0
 		window.location.reload()
 		break
 	case 1:  // all exhibits
@@ -632,8 +633,7 @@ const handleButtonClick = (id) => {
 		break
 	default:  // all exhibits buttons
 		id -= substract
-		currentExhibitIndex = id * 2
-		currentExhibit = EXHIBITS[currentExhibitIndex]
+		setExhibit(id * 2)
 		hideAllExhibitsOverlay()
 		prepareScene()
 	}
@@ -875,6 +875,12 @@ const array_true = arr => arr.every(Boolean);
 const forwardExhibit = () => {
 	currentExhibitIndex++
 	currentExhibit = EXHIBITS[currentExhibitIndex]
+	cookies.progress = currentExhibitIndex + 1
+}
+const setExhibit = (to, skipCookies=false) => {
+	currentExhibitIndex = to
+	currentExhibit = EXHIBITS[currentExhibitIndex]
+	if (!skipCookies) cookies.progress = to + 1
 }
 
 //
@@ -964,7 +970,7 @@ const step2 = () => {
 		backSpeed: 2,
 		onComplete: () => { setTimeout(step3, 1000) }
 	});
-	cookies.progress = '1'
+	cookies.progress = 1
 }
 const step3 = () => {
 	termText.innerHTML = ''
