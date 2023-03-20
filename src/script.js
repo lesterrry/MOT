@@ -422,6 +422,7 @@ let distract = true
 let currentOverlayFocus = 0
 let currentProgress = [false, false, false]
 let progressToBeSet = false
+let started = false
 let finished = false
 let TPF = 0
 let last = 0
@@ -429,7 +430,7 @@ let logoHover = false
 let logoAnimationNormalized = false
 let threeLoaded = false
 let buttons = []
-let attacking = false
+let attacking = true
 
 // 
 // Cookie handling
@@ -496,6 +497,8 @@ const overlayDescription = document.querySelector('.overlay.partial p')
 const overlay = document.querySelector('.overlay.partial')
 const overlayWindow = document.querySelector('.overlay.partial .window')
 const allExhibitsOverlay = document.querySelector('.overlay.all-exhibits')
+const fullOverlay = document.querySelector('.overlay.full')
+const fullOverlayTitle = document.querySelector('.overlay.full p')
 const cornerTextLU = document.querySelector('.content h3#lu')
 const cornerTextRU = document.querySelector('.content h3#ru')
 const cornerTextLD = document.querySelector('.content h3#ld')
@@ -576,9 +579,16 @@ window.addEventListener('mousemove', (event) => {
 	// console.log(cursor.x.balanced, cursor.y.center)
 })
 window.addEventListener('click', async () => {
-	await TONE.start()
-	await osc.start()
-	console.log('audio is ready')
+	if (!started) {
+		await TONE.start()
+		await osc.start()
+		threeTick()
+		initialSpinner.style['top'] = '80px'
+		flow(cookies.progress != 0)
+		hideFullOverlay()
+		started = true
+		return
+	}
 	if (cursor.focus !== false && !distract) {
 		synth.triggerAttackRelease('A3', '8n')
 		synth.triggerAttackRelease('A2', '8n', '+0.2')
@@ -607,11 +617,7 @@ window.addEventListener('load', () => {
 	}
 	conformMuteButton()
 	setSpinner(false)
-	threeTick()
-	setTimeout(() => { 
-		initialSpinner.style['top'] = '80px'
-		flow(cookies.progress != 0)
-	}, 1000)  // Delay for load-safety
+	showFullOverlay('Нажмите на экран, чтобы начать')
 })
 
 const handleButtonClick = (id) => {
@@ -760,6 +766,14 @@ const populateAllExhibitsOverlay = () => {
 		data.push(s)
 	}
 	allExhibitsOverlay.innerHTML = data.join('\n')
+}
+const showFullOverlay = (withText) => {
+	fullOverlayTitle.innerText = withText
+	fullOverlay.style['display'] = 'initial'
+}
+const hideFullOverlay = () => {
+	fullOverlayTitle.innerText = 'Увеличьте окно'
+	fullOverlay.style['display'] = ''
 }
 
 //
@@ -1005,7 +1019,8 @@ const step1 = () => {
 		strings,
 		typeSpeed: 10,
 		startDelay: 1000,
-		onComplete: step2
+		onComplete: step2,
+		preStringTyped: () => { }
 	});
 }
 const step2 = () => {
@@ -1025,7 +1040,8 @@ const step2 = () => {
 		typeSpeed: 20,
 		startDelay: 1000,
 		backSpeed: 2,
-		onComplete: () => { setTimeout(step3, 1000) }
+		onComplete: () => { setTimeout(step3, 1000) },
+		preStringTyped: () => { }
 	});
 	cookies.progress = 1
 }
