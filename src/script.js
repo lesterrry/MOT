@@ -491,10 +491,12 @@ const overlay = document.querySelector('.overlay.partial')
 const overlayWindow = document.querySelector('.overlay.partial .window')
 const allExhibitsOverlay = document.querySelector('.overlay.all-exhibits')
 const cornerTextLU = document.querySelector('.content h3#lu')
+const cornerTextRU = document.querySelector('.content h3#ru')
 const cornerTextLD = document.querySelector('.content h3#ld')
 const cornerTextRD = document.querySelector('.content h3#rd')
 const cornerTextMap = [
 	cornerTextLU,
+	cornerTextRU,
 	cornerTextLD,
 	cornerTextRD
 ]
