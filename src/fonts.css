@@ -18,24 +18,6 @@
 
 @font-face {
 	font-family: 'JetBrains Mono';
-	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwgknk-6nFg.woff2) format('woff2');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-	unicode-range: U+0370-03FF;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwgknk-6nFg.woff2) format('woff2');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
 	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwgknk-6nFg.woff2) format('woff2');
 	font-weight: 400;
 	font-style: normal;
@@ -72,24 +54,6 @@
 
 @font-face {
 	font-family: 'JetBrains Mono';
-	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwgknk-6nFg.woff2) format('woff2');
-	font-weight: 500;
-	font-style: normal;
-	font-display: swap;
-	unicode-range: U+0370-03FF;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwgknk-6nFg.woff2) format('woff2');
-	font-weight: 500;
-	font-style: normal;
-	font-display: swap;
-	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
 	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwgknk-6nFg.woff2) format('woff2');
 	font-weight: 500;
 	font-style: normal;
@@ -122,24 +86,6 @@
 	font-style: normal;
 	font-display: swap;
 	unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwgknk-6nFg.woff2) format('woff2');
-	font-weight: 600;
-	font-style: normal;
-	font-display: swap;
-	unicode-range: U+0370-03FF;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url(fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwgknk-6nFg.woff2) format('woff2');
-	font-weight: 600;
-	font-style: normal;
-	font-display: swap;
-	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
 @font-face {
