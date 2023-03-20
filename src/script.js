@@ -545,7 +545,7 @@ window.addEventListener('resize', () => {
 })
 window.addEventListener('mousemove', (event) => {
 	if (!attacking) {
-		env.triggerAttack()
+		osc.start()
 		attacking = true
 	}
 	cursor.x.corner = event.clientX - 11
@@ -671,19 +671,13 @@ const handleButtonClick = (id) => {
 //
 // Sound
 //
-const env = new TONE.AmplitudeEnvelope({
-	attack: 0.1,
-	decay: 1,
-	sustain: 0.2,
-	release: 0.5
-}).toDestination()
 
 const osc = new TONE.Oscillator({
-	partials: [1, 2, 3],
-	type: "custom",
-	frequency: "C#2",
-	volume: -10,
-}).connect(env)
+	partialCount: 2,
+	type: "square",
+	frequency: 440,
+	volume: -8,
+}).toDestination()
 
 const synth = new TONE.PolySynth(TONE.Synth, {
 	oscillator: {
@@ -970,7 +964,7 @@ const threeTick = () => {
 			Math.round(cursor.x.corner - cursor.x.cornerCurrent) == 0 &&
 			Math.round(cursor.y.corner - cursor.y.cornerCurrent) == 0
 			) { 
-			env.triggerRelease()
+			osc.stop()
 			attacking = false
 		}
 
