@@ -583,7 +583,6 @@ window.addEventListener('mousemove', (event) => {
 window.addEventListener('click', async () => {
 	if (!started) {
 		await TONE.start()
-		await noise.start()
 		threeTick()
 		initialSpinner.style['top'] = '80px'
 		flow(cookies.progress != 0)
@@ -642,7 +641,13 @@ const handleButtonClick = (id) => {
 		break
 	case 2:  // mute
 		cookies.mute = !cookies.mute
-		cookies.mute ? osc.stop() : osc.start()
+		if (cookies.mute) {
+			osc.stop()
+			noise.stop()
+		} else {
+			noise.start()
+			osc.start()
+		}
 		conformMuteButton()
 		break
 	case 3:  // help
@@ -875,6 +880,7 @@ const finalizeScene = () => {
 const loadScene = (exhibit) => {
 	if (!cookies.mute) {
 		osc.start()
+		noise.start()
 	}
 	finished = exhibit.is_artifact ? true : false
 	cursorSub.style['background-color'] = exhibit.is_artifact ? 'white' : 'black'
