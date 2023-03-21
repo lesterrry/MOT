@@ -979,6 +979,14 @@ const playSequence = (note, times, offsetIncrement=0.1) => {
 		offset += offsetIncrement
 	}
 }
+const playLogoSequence = (reverse=false) => {
+	const notes = ['C4', 'E4', 'G4', 'B4']
+	if (reverse) notes.reverse()
+	synth.triggerAttackRelease(notes[0], '8n')
+	synth.triggerAttackRelease(notes[1], '8n', '+0.1')
+	synth.triggerAttackRelease(notes[2], '8n', '+0.2')
+	synth.triggerAttackRelease(notes[3], '8n', '+0.3')
+}
 
 //
 // Main loop
@@ -1011,19 +1019,13 @@ const threeTick = () => {
 		if (logo.matches(":hover") != logoHover) {
 			if (logoHover) {
 				if (!cookies.mute) {
-					synth.triggerAttackRelease('B4', '8n')
-					synth.triggerAttackRelease('G4', '8n', '+0.1')
-					synth.triggerAttackRelease('E4', '8n', '+0.2')
-					synth.triggerAttackRelease('C4', '8n', '+0.3')
+					playLogoSequence(true)
 				}
 				logoAnimation.setDirection(-1)
 				logoAnimation.play()
 			} else {
 				if (!cookies.mute) {
-					synth.triggerAttackRelease('C4', '8n')
-					synth.triggerAttackRelease('E4', '8n', '+0.1')
-					synth.triggerAttackRelease('G4', '8n', '+0.2')
-					synth.triggerAttackRelease('B4', '8n', '+0.3')
+					playLogoSequence(false)
 				}
 				if (logoAnimationNormalized) {
 					logoAnimation.setDirection(1)
@@ -1116,10 +1118,7 @@ const step3 = () => {
 	// TODO:
 	// ext func
 	if (!cookies.mute) {
-		synth.triggerAttackRelease('C4', '8n')
-		synth.triggerAttackRelease('E4', '8n', '+0.1')
-		synth.triggerAttackRelease('G4', '8n', '+0.2')
-		synth.triggerAttackRelease('B4', '8n', '+0.3')
+		playLogoSequence(false)
 	}
 	setTimeout(() => {
 		prepareScene()
