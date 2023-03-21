@@ -12,6 +12,7 @@ import PNG_P2 from '../static/img/exhibits/p2.png'
 import PNG_P3 from '../static/img/exhibits/p3.png'
 import PNG_P4 from '../static/img/exhibits/p4.png'
 import PNG_P5 from '../static/img/exhibits/p5.png'
+import MP3_1 from '../static/audio/startup.mp3'
 
 //
 // Classes
@@ -684,12 +685,12 @@ const osc = new TONE.FatOscillator({
 }).toDestination()
 const volume = new TONE.Signal(120);
 volume.connect(osc.frequency)
-
 const synth = new TONE.PolySynth(TONE.Synth, {
 	oscillator: {
 		partials: [0, 2, 3, 4],
 	}
 }).toDestination()
+const startupPlayer = new TONE.Player(MP3_1).toDestination()
 
 //
 // Lotties
@@ -1041,21 +1042,21 @@ const flow = (rewind=false) => {
 	}
 }
 const step1 = () => {
+	startupPlayer.start()
 	let strings = [
 		'[ ~ ] initializing...^1000\n`[ * ] success`^500\n[ ~ ] configuring client...^1000\n`[ ! ] error >>>`\n`    ]> hardware too old`\n`    ]> will use bridge`\n`    ]> `^800',
 		'',
-		'[ ~ ] preparing bridge...^1000\n`[ * ] success {{{`\n`    ]{ protocol: ( XXI century internet <=> uninet© )`\n`    ]{ client: ( ' + client + ' )`\n`    ]{ session: ( ' + cookies.sessionID + '` )\n[\n[\n[\n[\n[ ~ ] launching...^1000\n`[ * ] success`^250'
+		'[ ~ ] preparing bridge...^1000\n`[ * ] success {{{`\n`    ]{ protocol: ( XXI century internet <=> uninet© )`\n`    ]{ client: ( ' + client + ' )`\n`    ]{ session: ( ' + cookies.sessionID + '` )\n[\n[\n[\n[\n[ ~ ] launching...^1000\n`[ * ] success`'
 	]
 	let typed = new Typed(termText, {
 		strings,
 		typeSpeed: 10,
 		startDelay: 1000,
-		onComplete: step2,
-		preStringTyped: () => {  },
-		onStringTyped: () => {  }
+		onComplete: () => { playSequence('A4', 2); setTimeout(step2, 1000) }
 	});
 }
 const step2 = () => {
+	startupPlayer.stop().dispose()
 	termText.innerHTML = ''
 	termText.style['top'] = '50%'
 	termText.style['text-align'] = 'center'
@@ -1093,8 +1094,8 @@ const step2 = () => {
 		onStringTyped: (array) => { 
 			if (cookies.mute) return
 			if (array == 3) {
-				setTimeout(() => playRandomSequence(10), 2000)
-				setTimeout(() => playRandomSequence(10), 4000)
+				setTimeout(() => playRandomSequence(8), 2000)
+				setTimeout(() => playRandomSequence(8), 4000)
 			}
 		}
 	});
