@@ -474,6 +474,7 @@ const deserializeCookies = () => {
 	return true
 }
 const serializeCookies = () => {
+	// return
 	let replacer = (key, value) => {
 		if (key[0] == '_' || typeof value === 'object') return value;
 		else return undefined;
@@ -582,6 +583,7 @@ window.addEventListener('mousemove', (event) => {
 window.addEventListener('click', async () => {
 	if (!started) {
 		await TONE.start()
+		await noise.start()
 		threeTick()
 		initialSpinner.style['top'] = '80px'
 		flow(cookies.progress != 0)
@@ -690,7 +692,14 @@ const synth = new TONE.PolySynth(TONE.Synth, {
 		partials: [0, 2, 3, 4],
 	}
 }).toDestination()
-const startupPlayer = new TONE.Player(MP3_1).toDestination()
+const startupPlayer = new TONE.Player({
+	url: MP3_1,
+	volume: -2
+}).toDestination()
+const noise = new TONE.Noise({
+	type: 'brown',
+	volume: -36
+}).toDestination()
 
 //
 // Lotties
@@ -1056,7 +1065,6 @@ const step1 = () => {
 	});
 }
 const step2 = () => {
-	startupPlayer.stop().dispose()
 	termText.innerHTML = ''
 	termText.style['top'] = '50%'
 	termText.style['text-align'] = 'center'
@@ -1078,6 +1086,7 @@ const step2 = () => {
 			if (cookies.mute) return
 			switch (array) {
 			case 0:
+				startupPlayer.stop().dispose()
 				playRandomSequence(6) 
 				break
 			case 1:
