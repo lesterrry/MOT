@@ -394,6 +394,7 @@ let logoAnimationNormalized = false
 let threeLoaded = false
 let buttons = []
 let attacking = true
+let mobile = false
 
 // 
 // Cookie handling
@@ -474,7 +475,7 @@ const cornerTextMap = [
 	cornerTextRD
 ]
 const exhibitTitle = document.querySelector('.content h1')
-const exhibitDescription = document.querySelector('.description p')
+const exhibitDescriptionText = document.querySelector('.description p')
 const exhibitProgress = document.querySelector('.content .quest-progress')
 const exhibitProgressTitle = document.querySelector('.content .quest-progress h2')
 const exhibitProgressSubtitleA = document.querySelector('.content .quest-progress h3#a')
@@ -542,13 +543,13 @@ window.addEventListener('mousemove', (event) => {
 	}
 	// console.log(cursor.x.balanced, cursor.y.center)
 })
-window.addEventListener('click', async () => {
+document.addEventListener('click', async () => {
 	if (!started) {
 		await TONE.start()
 		threeTick()
 		initialSpinner.style['top'] = '80px'
 		flow(cookies.progress != 0)
-		hideFullOverlay()
+		hideFullOverlay(mobile)
 		started = true
 		return
 	}
@@ -571,6 +572,18 @@ window.addEventListener('click', async () => {
 })
 
 window.addEventListener('load', () => {
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+		console.log('Detected mobile screen')
+		mobile = true
+		menu.style['display'] = 'none'
+		exhibitTitle.style['top'] = '48px'
+		exhibitTitle.style['font-size'] = '68px'
+		exhibitTitle.style['line-height'] = '1'
+		document.querySelector('.description').style['display'] = 'none'
+		document.querySelector('.frame').style['display'] = 'zoom: 0.75'
+		exhibitProgress.style['display'] = 'none'
+		if (cookies.progress == 0) { cookies.progress = 1 }
+	}
 	if (!deserializeCookies()) {
 		serializeCookies()
 	}
@@ -748,9 +761,9 @@ const showFullOverlay = (withText) => {
 	fullOverlayTitle.innerText = withText
 	fullOverlay.style['display'] = 'initial'
 }
-const hideFullOverlay = () => {
+const hideFullOverlay = (force=false) => {
 	fullOverlayTitle.innerText = 'Увеличьте окно'
-	fullOverlay.style['display'] = ''
+	fullOverlay.style['display'] = force ? 'none' : ''
 }
 
 //
@@ -851,11 +864,12 @@ const loadScene = (exhibit) => {
 		item.style['display'] = exhibit.is_artifact ? 'none' : ''
 	})
 	cornerTextLU.innerText = `MOT — EXHIBIT #${exhibit.index}`
-	cornerTextLD.innerText = `SESSION #${cookies.sessionID}\n192.168.31.232`
-	cornerTextRD.innerText = `${(new Date()).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n Year 21${(new Date()).toLocaleDateString('en-US', { year: '2-digit' })}`
+	cornerTextLD.innerText = mobile ? '' : `SESSION #${cookies.sessionID}\n192.168.31.232`
+	cornerTextRU.innerText = mobile ? '' : 'MUSEUM OF TIME\nVIRTUAL TOUR' 
+	cornerTextRD.innerText = mobile ? '' : `${(new Date()).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n Year 21${(new Date()).toLocaleDateString('en-US', { year: '2-digit' })}`
 	exhibitTitle.innerText = exhibit.title
 	exhibitTitle.style['color'] = exhibit.is_artifact ? 'white' : 'black'
-	exhibitDescription.innerText = exhibit.description
+	exhibitDescriptionText.innerText = exhibit.description
 	exhibitProgressTitle.innerText = exhibit.is_artifact ? 'Разблокирован артефакт' : 'Осмотрите экспонат'
 	exhibitProgressSubtitleMap.map((item) => {
 		item.innerText = exhibit.is_artifact ? '' : '???'
@@ -867,6 +881,16 @@ const loadScene = (exhibit) => {
 	exhibitProgressSubtitleTickH.innerHTML = ''
 	setExhibitProgressButton(exhibit.is_artifact, exhibit.is_artifact, false)
 	exhibitProgressSubtitleSpinner.style['display'] = exhibit.is_artifact ? 'none' : ''
+
+	if (mobile) {
+		let controls = new OrbitControls( camera, renderer.domElement );
+		controls.enableDamping = true
+		controls.dampingFactor = 0.05
+		controls.screenSpacePanning = false
+		controls.minDistance = 10
+		controls.maxDistance = 50
+		controls.maxPolarAngle = Math.PI / 2;
+	}
 
 	camera.position.set(0, 0, exhibit.camera.zPosition)
 	scene.add(camera)
@@ -965,24 +989,23 @@ const threeTick = () => {
 		TPF = Math.round((elapsedTime - last) * 100) / 100
 		last = elapsedTime
 
-		camera.position.x = (cursor.x.center * currentExhibit.camera.xMultiplier) + currentExhibit.camera.xAppender
-		camera.position.y = (cursor.y.center * currentExhibit.camera.yMultiplier) + currentExhibit.camera.yAppender
-		camera.lookAt(new THREE.Vector3(...currentExhibit.camera.anchor))
+		if (!mobile) {
+			camera.position.x = (cursor.x.center * currentExhibit.camera.xMultiplier) + currentExhibit.camera.xAppender
+			camera.position.y = (cursor.y.center * currentExhibit.camera.yMultiplier) + currentExhibit.camera.yAppender
+			camera.lookAt(new THREE.Vector3(...currentExhibit.camera.anchor))
+			cursor.x.cornerCurrent += (cursor.x.corner - cursor.x.cornerCurrent) * (TPF * 10)
+			cursor.y.cornerCurrent += (cursor.y.corner - cursor.y.cornerCurrent) * (TPF * 10)
+			const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
+			let s = cursorSub.style
+			s['transform'] = t
+			s['webkitTransform'] = t
+			s['mozTransform'] = t
+			s['msTransform'] = t
+			let x = 100 + (0.75 * (Math.abs(Math.round(cursor.x.corner - cursor.x.cornerCurrent))))
+			volume.rampTo(x, 0.1)
+		}
 
 		renderer.render(scene, camera)
-
-		cursor.x.cornerCurrent += (cursor.x.corner - cursor.x.cornerCurrent) * (TPF * 10)
-		cursor.y.cornerCurrent += (cursor.y.corner - cursor.y.cornerCurrent) * (TPF * 10)
-		const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
-		let s = cursorSub.style
-
-		let x = 100 + (0.75 * (Math.abs(Math.round(cursor.x.corner - cursor.x.cornerCurrent))))
-		volume.rampTo(x, 0.1)
-
-		s['transform'] = t
-		s['webkitTransform'] = t
-		s['mozTransform'] = t
-		s['msTransform'] = t
 
 		if (logo.matches(":hover") != logoHover) {
 			if (logoHover) {
