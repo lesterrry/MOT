@@ -553,7 +553,7 @@ document.addEventListener('click', async () => {
 		started = true
 		return
 	}
-	if (cursor.focus !== false && !distract) {
+	if (cursor.focus !== false && !distract && !mobile) {
 		if (!cookies.mute) {
 			synth.triggerAttackRelease('A3', '8n')
 			synth.triggerAttackRelease('A2', '8n', '+0.2')
@@ -581,6 +581,7 @@ window.addEventListener('load', () => {
 		exhibitTitle.style['line-height'] = '1'
 		document.querySelector('.description').style['display'] = 'none'
 		document.querySelector('.frame').style['display'] = 'zoom: 0.75'
+		document.querySelector('.footer-button-container').style['display'] = 'initial'
 		exhibitProgress.style['display'] = 'none'
 		if (cookies.progress == 0) { cookies.progress = 1 }
 	}
@@ -629,9 +630,10 @@ const handleButtonClick = (id) => {
 		showOverlay(['Что делать', 'МУВР — музей времени. Здесь представлены экспонаты, олицетворяющее ту или иную трудность, с которой сталкивались люди до изобретения технологии изменения времени. За каждым экспонатом стоит свой артефакт — прибор «скип». Чтобы его разблокировать, изучайте экспонат курсором, пока он не изменит свое состояние, после чего нажмите на обнаруженную деталь.'])
 		break
 	case 4:  // next exhibit
-		if (finished) destroyScene(true)
+	case 5:
+		if (finished || mobile) destroyScene(true)
 		break
-	case 5:  // partial overlay close
+	case 6:  // partial overlay close
 		hideOverlay(currentProgress[currentOverlayFocus] || !progressToBeSet)
 		if (!progressToBeSet) return
 		currentProgress[currentOverlayFocus] = true
@@ -645,7 +647,7 @@ const handleButtonClick = (id) => {
 		}
 		progressToBeSet = false
 		break
-	case 6:  // all exhibits overlay close
+	case 7:  // all exhibits overlay close
 		hideAllExhibitsOverlay()
 		prepareScene()
 		break
