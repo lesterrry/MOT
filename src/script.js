@@ -388,6 +388,7 @@ let currentProgress = [false, false, false]
 let progressToBeSet = false
 let started = false
 let finished = false
+let ended = false
 let TPF = 0
 let last = 0
 let logoHover = false
@@ -606,7 +607,7 @@ const handleButtonClick = (id) => {
 	if (!cookies.mute) {
 		synth.triggerAttackRelease('A3', '8n', '+0.2')
 	}
-	let substract = 7
+	let substract = 8
 	switch (id) {
 	case 0:  // relaunch
 		cookies.progress = 0
@@ -635,6 +636,12 @@ const handleButtonClick = (id) => {
 		if (finished || mobile) destroyScene(true)
 		break
 	case 6:  // partial overlay close
+		if (ended) {
+			hideOverlay(true)
+			prepareScene()
+			ended = false
+			break
+		}
 		hideOverlay(currentProgress[currentOverlayFocus] || !progressToBeSet)
 		if (!progressToBeSet) return
 		currentProgress[currentOverlayFocus] = true
@@ -840,8 +847,8 @@ const destroyScene = (advance, hideLogo=false) => {
 		currentOverlayFocus = 0
 		currentProgress = [false, false, false]
 		if (advance) {
-			forwardExhibit()
-			prepareScene()
+			if (forwardExhibit()) prepareScene()
+			else step4()
 		}
 	}, 1100)
 }
@@ -941,9 +948,16 @@ const deloadScene = () => {
 //
 const array_true = arr => arr.every(Boolean);
 const forwardExhibit = () => {
+	if (currentExhibitIndex >= EXHIBITS.length - 1) {
+		currentExhibitIndex = 0
+		cookies.progress = 1
+		currentExhibit = EXHIBITS[currentExhibitIndex]
+		return false
+	}
 	currentExhibitIndex++
 	currentExhibit = EXHIBITS[currentExhibitIndex]
 	cookies.progress = currentExhibitIndex + 1
+	return true
 }
 const setExhibit = (to, skipCookies=false) => {
 	currentExhibitIndex = to
@@ -1108,6 +1122,7 @@ const step2 = () => {
 	cookies.progress = 1
 }
 const step3 = () => {
+	ended = false
 	termText.innerHTML = ''
 	logoAnimation.playSegments([0, 9], true)
 	// TODO:
@@ -1118,4 +1133,8 @@ const step3 = () => {
 	setTimeout(() => {
 		prepareScene()
 	}, 500)
+}
+const step4 = () => {
+	ended = true
+	showOverlay(['Вот и все', `Ваше путешествие подошло к концу. Полагаю, оно показало вам, каким ужасным была жизнь людей, вынужденных постоянно чего-то ожидать. Но если этот опыт был для вас недостаточно отвратителен, можете повторить экскурсию, перезагрузив страницу или нажав на кнопку.`])
 }
