@@ -574,6 +574,9 @@ document.addEventListener('click', async () => {
 })
 
 window.addEventListener('load', () => {
+	if (!deserializeCookies()) {
+		serializeCookies()
+	}
 	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
 		console.log('Detected mobile screen')
 		mobile = true
@@ -586,9 +589,6 @@ window.addEventListener('load', () => {
 		document.querySelector('.footer-button-container').style['display'] = 'initial'
 		exhibitProgress.style['display'] = 'none'
 		if (cookies.progress == 0) { cookies.progress = 1 }
-	}
-	if (!deserializeCookies()) {
-		serializeCookies()
 	}
 	populateAllExhibitsOverlay()
 	setExhibit(cookies.progress == 0 ? 0 : cookies.progress - 1, true)
