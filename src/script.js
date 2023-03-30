@@ -379,6 +379,7 @@ let cursor = {
 const client = window.navigator.userAgent
 const clueHuntOffset = 0.04
 const clock = new THREE.Clock()
+const year = (new Date()).toLocaleDateString('en-US', { year: '2-digit' })
 let currentExhibitIndex = 0
 let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
@@ -868,7 +869,7 @@ const loadScene = (exhibit) => {
 	cornerTextLU.innerText = `MOT — EXHIBIT #${exhibit.index}`
 	cornerTextLD.innerText = mobile ? '' : `SESSION #${cookies.sessionID}\n192.168.31.232`
 	cornerTextRU.innerText = mobile ? '' : 'MUSEUM OF TIME\nVIRTUAL TOUR' 
-	cornerTextRD.innerText = mobile ? '' : `${(new Date()).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n Year 21${(new Date()).toLocaleDateString('en-US', { year: '2-digit' })}`
+	cornerTextRD.innerText = mobile ? '' : `${(new Date()).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n Year 21${year}`
 	exhibitTitle.innerText = exhibit.title
 	exhibitTitle.style['color'] = exhibit.is_artifact ? 'white' : 'black'
 	exhibitDescriptionText.innerText = exhibit.description
@@ -1064,7 +1065,7 @@ const step2 = () => {
 	termText.style['top'] = '50%'
 	termText.style['text-align'] = 'center'
 	let strings = [
-		'2133 год.^2000',
+		`21${year} год.^2000`,
 		'Человечество давно научилось управлять временем.^2000',
 		'Скука, нетерпение, очереди и пробки, ностальгия и тоска\nостались в прошлом.^2000',
 		'Музей времени — последнее напоминание о том, какой мучительной\nбыла жизнь до изобретения этой технологии.^2000',
