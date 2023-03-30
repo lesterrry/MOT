@@ -1005,6 +1005,7 @@ const threeTick = () => {
 			s['mozTransform'] = t
 			s['msTransform'] = t
 			let x = 100 + (0.75 * (Math.abs(Math.round(cursor.x.corner - cursor.x.cornerCurrent))))
+			if (x > 200) x = 200
 			volume.rampTo(x, 0.1)
 		}
 
