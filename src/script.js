@@ -581,12 +581,15 @@ window.addEventListener('load', () => {
 		console.log('Detected mobile screen')
 		mobile = true
 		menu.style['display'] = 'none'
-		exhibitTitle.style['top'] = '48px'
-		exhibitTitle.style['font-size'] = '68px'
+		exhibitTitle.style['top'] = '38px'
+		exhibitTitle.style['font-size'] = '54px'
 		exhibitTitle.style['line-height'] = '1'
+		cornerTextLU.style['top'] = '20px'
+		overlayWindow.style['width'] = '100%'
 		document.querySelector('.description').style['display'] = 'none'
-		document.querySelector('.frame').style['display'] = 'zoom: 0.75'
+		document.querySelector('.frame').style['display'] = 'zoom: 0.2'
 		document.querySelector('.footer-button-container').style['display'] = 'initial'
+		document.querySelector('body').style['-webkit-user-select'] = 'none'
 		exhibitProgress.style['display'] = 'none'
 		if (cookies.progress == 0) { cookies.progress = 1 }
 	}
@@ -734,7 +737,7 @@ const showOverlay = (data) => {
 		overlayDescription.innerText = data[1]
 	}
 	overlay.style['display'] = 'initial'
-	gsap.from(overlayWindow, { height: 0, duration: 0.5, clearProps: 'all' })
+	gsap.from(overlayWindow, { height: 0, duration: 0.5, clearProps: mobile ? false : 'all' })
 	distract = true
 }
 const hideOverlay = (quiet) => {
@@ -899,10 +902,10 @@ const loadScene = (exhibit) => {
 		controls.enableZoom = false
 		controls.autoRotate = true
 		controls.dampingFactor = 0.05
-		controls.panSpeed = 0.5
+		controls.panSpeed = 0.05
 		controls.screenSpacePanning = false
-		controls.minDistance = exhibit.camera.zPosition + 2
-		controls.maxDistance = exhibit.camera.zPosition + 2
+		controls.minDistance = exhibit.camera.zPosition * 1.8
+		controls.maxDistance = exhibit.camera.zPosition * 1.8
 		controls.maxPolarAngle = Math.PI / 2;
 	}
 

@@ -323,6 +323,8 @@ img, svg {
 	font-weight: 600;
 	left: 22px;
 	top: 32px;
+	word-wrap: break-word;
+	width: 88%;
 }
 
 .content h3 {
