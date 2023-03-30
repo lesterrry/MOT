@@ -829,6 +829,7 @@ renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+let controls
 
 const prepareScene = (exhibit=currentExhibit) => {
 	setSpinner(true)
@@ -893,12 +894,15 @@ const loadScene = (exhibit) => {
 	exhibitProgressSubtitleSpinner.style['display'] = exhibit.is_artifact ? 'none' : ''
 
 	if (mobile) {
-		let controls = new OrbitControls( camera, renderer.domElement );
+		controls = new OrbitControls(camera, renderer.domElement)
 		controls.enableDamping = true
+		controls.enableZoom = false
+		controls.autoRotate = true
 		controls.dampingFactor = 0.05
+		controls.panSpeed = 0.5
 		controls.screenSpacePanning = false
-		controls.minDistance = 10
-		controls.maxDistance = 50
+		controls.minDistance = exhibit.camera.zPosition + 2
+		controls.maxDistance = exhibit.camera.zPosition + 2
 		controls.maxPolarAngle = Math.PI / 2;
 	}
 
@@ -1009,7 +1013,6 @@ const threeTick = () => {
 		if (!mobile) {
 			camera.position.x = (cursor.x.center * currentExhibit.camera.xMultiplier) + currentExhibit.camera.xAppender
 			camera.position.y = (cursor.y.center * currentExhibit.camera.yMultiplier) + currentExhibit.camera.yAppender
-			camera.lookAt(new THREE.Vector3(...currentExhibit.camera.anchor))
 			cursor.x.cornerCurrent += (cursor.x.corner - cursor.x.cornerCurrent) * (TPF * 10)
 			cursor.y.cornerCurrent += (cursor.y.corner - cursor.y.cornerCurrent) * (TPF * 10)
 			const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
@@ -1021,7 +1024,10 @@ const threeTick = () => {
 			let x = 100 + (0.75 * (Math.abs(Math.round(cursor.x.corner - cursor.x.cornerCurrent))))
 			if (x > 200) x = 200
 			volume.rampTo(x, 0.1)
+		} else {
+			controls.update()
 		}
+		camera.lookAt(new THREE.Vector3(...currentExhibit.camera.anchor))
 
 		renderer.render(scene, camera)
 
