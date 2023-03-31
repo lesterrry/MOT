@@ -9,7 +9,8 @@ module.exports = {
     {
         hashFunction: 'xxhash64',
         filename: 'bundle.[contenthash].js',
-        path: path.resolve(__dirname, '../dist')
+        path: path.resolve(__dirname, '../dist'),
+        publicPath: '/mot/'
     },
     devtool: 'source-map',
     plugins:
