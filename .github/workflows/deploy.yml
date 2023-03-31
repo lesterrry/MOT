@@ -1,0 +1,25 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: appleboy/ssh-action@v0.1.2
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        key: ${{ secrets.SSH_KEY }}
+        username: ${{ secrets.SSH_USERNAME }}
+        script: |
+          cd mot
+          git pull
+          npm run build
+          rm -fr /var/www/dist/mot
+          mkdir /var/www/dist/mot/
+          cp -a /root/mot/dist/* /var/www/dist/mot/
+        
