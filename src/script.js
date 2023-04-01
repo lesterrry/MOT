@@ -1,6 +1,13 @@
+/*************************
+Handcrafted by Aydar N.
+2023
+
+me@aydar.media
+*************************/
+
 import './style.css'
-import gsap from 'gsap'
-import Typed from 'typed.js'
+import GSAP from 'gsap'
+import TYPED from 'typed.js'
 import * as LOTTIE from 'lottie-web'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -18,8 +25,8 @@ import MP3_1 from '../static/audio/startup.mp3'
 // Classes
 //
 class Exhibit {
-	constructor(is_artifact, index, title, description, image, model, pois, camera) {
-		this.is_artifact = is_artifact
+	constructor(isArtifact, index, title, description, image, model, pois, camera) {
+		this.isArtifact = isArtifact
 		this.index = index
 		this.title = title
 		this.description = description
@@ -54,7 +61,7 @@ class Camera {
 //
 // Globals
 //
-const imageMap = {
+const IMAGEMAP = {
 	'p1': PNG_P1,
 	'p2': PNG_P2,
 	'p3': PNG_P3,
@@ -358,7 +365,7 @@ const EXHIBITS = [
 		)
 	)
 ]
-const sizes = {
+const SIZES = {
 	width: window.innerWidth,
 	height: window.innerHeight
 }
@@ -376,10 +383,10 @@ let cursor = {
 	},
 	focus: false
 }
-const client = window.navigator.userAgent
-const clueHuntOffset = 0.04
-const clock = new THREE.Clock()
-const year = (new Date()).toLocaleDateString('en-US', { year: '2-digit' })
+const CLIENT = window.navigator.userAgent
+const CLUE_HUNT_OFFSET = 0.04
+const CLOCK = new THREE.Clock()
+const YEAR = (new Date()).toLocaleDateString('en-US', { year: '2-digit' })
 let currentExhibitIndex = 0
 let currentExhibit = EXHIBITS[currentExhibitIndex]
 let distract = true
@@ -391,8 +398,8 @@ let finished = false
 let ended = false
 let TPF = 0
 let last = 0
-let logoHover = false
-let logoAnimationNormalized = false
+let LOGOHover = false
+let LOGOAnimationNormalized = false
 let threeLoaded = false
 let buttons = []
 let attacking = true
@@ -439,6 +446,7 @@ const deserializeCookies = () => {
 	return true
 }
 const serializeCookies = () => {
+	// Uncomment to disable cookies
 	// return
 	let replacer = (key, value) => {
 		if (key[0] == '_' || typeof value === 'object') return value;
@@ -451,16 +459,16 @@ const serializeCookies = () => {
 //
 // Selectors
 //
-const canvas = document.querySelector('canvas.webgl')
-const cursorSub = document.querySelector('div.cursor-sub')
-const footer = document.querySelector('.frame-part#d')
-const menu = document.querySelector('div.menu')
-const logo = document.querySelector('div.logo')
-const initialSpinner = document.querySelector('.spinner#initial')
-const termText = document.querySelector('p.term')
-const exLink = document.querySelector('a.logo-link')
-const overlayTitle = document.querySelector('.overlay.partial h1')
-const overlayDescription = document.querySelector('.overlay.partial p')
+const CANVAS = document.querySelector('canvas.webgl')
+const CURSORSUB = document.querySelector('div.cursor-sub')
+const FOOTER = document.querySelector('.frame-part#d')
+const MENU = document.querySelector('div.menu')
+const LOGO = document.querySelector('div.logo')
+const INITIAL_SPINNER = document.querySelector('.spinner#initial')
+const TERM_TEXT = document.querySelector('p.term')
+const LOGO_LINK = document.querySelector('a.logo-link')
+const OVERLAY_TITLE = document.querySelector('.overlay.partial h1')
+const OVERLAY_DESCRIPTION = document.querySelector('.overlay.partial p')
 const overlay = document.querySelector('.overlay.partial')
 const overlayWindow = document.querySelector('.overlay.partial .window')
 const allExhibitsOverlay = document.querySelector('.overlay.all-exhibits')
@@ -503,11 +511,11 @@ const exhibitProgressSubtitleSpinner = document.querySelector('.content .quest-p
 // Events
 //
 window.addEventListener('resize', () => {
-	sizes.width = window.innerWidth
-	sizes.height = window.innerHeight
-	camera.aspect = sizes.width / sizes.height
+	SIZES.width = window.innerWidth
+	SIZES.height = window.innerHeight
+	camera.aspect = SIZES.width / SIZES.height
 	camera.updateProjectionMatrix()
-	renderer.setSize(sizes.width, sizes.height)
+	renderer.setSize(SIZES.width, SIZES.height)
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 window.addEventListener('mousemove', (event) => {
@@ -517,9 +525,9 @@ window.addEventListener('mousemove', (event) => {
 	}
 	cursor.x.corner = event.clientX - 11
 	cursor.y.corner = event.clientY - 11
-	cursor.x.center = event.clientX / sizes.width - 0.5
-	cursor.y.center = - (event.clientY / sizes.height - 0.5)
-	cursor.x.balanced = cursor.x.center * (sizes.width / sizes.height)
+	cursor.x.center = event.clientX / SIZES.width - 0.5
+	cursor.y.center = - (event.clientY / SIZES.height - 0.5)
+	cursor.x.balanced = cursor.x.center * (SIZES.width / SIZES.height)
 	if (cursor.x.cornerCurrent == 0) {
 		cursor.x.cornerCurrent = event.clientX
 		cursor.y.cornerCurrent = event.clientY
@@ -528,8 +536,8 @@ window.addEventListener('mousemove', (event) => {
 	let any = false
 	for (var i = 0; i < currentExhibit.pois.length; i++) {
 		if (
-			(cursor.x.balanced >= currentExhibit.pois[i].x - clueHuntOffset) && (cursor.x.balanced <= currentExhibit.pois[i].x + clueHuntOffset) &&
-			(cursor.y.center >= currentExhibit.pois[i].y - clueHuntOffset) && (cursor.y.center <= currentExhibit.pois[i].y + clueHuntOffset)
+			(cursor.x.balanced >= currentExhibit.pois[i].x - CLUE_HUNT_OFFSET) && (cursor.x.balanced <= currentExhibit.pois[i].x + CLUE_HUNT_OFFSET) &&
+			(cursor.y.center >= currentExhibit.pois[i].y - CLUE_HUNT_OFFSET) && (cursor.y.center <= currentExhibit.pois[i].y + CLUE_HUNT_OFFSET)
 		) {
 			if (cursor.focus === false) {
 				setCursor(true)
@@ -549,7 +557,7 @@ document.addEventListener('click', async () => {
 	if (!started) {
 		await TONE.start()
 		threeTick()
-		initialSpinner.style['top'] = '80px'
+		INITIAL_SPINNER.style['top'] = '80px'
 		flow(cookies.progress != 0)
 		hideFullOverlay(mobile)
 		started = true
@@ -580,7 +588,7 @@ window.addEventListener('load', () => {
 	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
 		console.log('Detected mobile screen')
 		mobile = true
-		menu.style['display'] = 'none'
+		MENU.style['display'] = 'none'
 		exhibitTitle.style['top'] = '38px'
 		exhibitTitle.style['font-size'] = '54px'
 		exhibitTitle.style['line-height'] = '1'
@@ -588,7 +596,7 @@ window.addEventListener('load', () => {
 		overlayWindow.style['width'] = '100%'
 		document.querySelector('.description').style['display'] = 'none'
 		document.querySelector('.frame').style['display'] = 'zoom: 0.2'
-		document.querySelector('.footer-button-container').style['display'] = 'initial'
+		document.querySelector('.FOOTER-button-container').style['display'] = 'initial'
 		document.querySelector('body').style['-webkit-user-select'] = 'none'
 		exhibitProgress.style['display'] = 'none'
 		if (cookies.progress == 0) { cookies.progress = 1 }
@@ -697,12 +705,12 @@ const noise = new TONE.Noise({
 //
 // Lotties
 //
-const logoAnimation = LOTTIE.loadAnimation({
-	container: logo,
+const LOGOAnimation = LOTTIE.loadAnimation({
+	container: LOGO,
 	renderer: 'svg',
 	loop: false,
 	autoplay: false,
-	path: '/lottie/logo.json'
+	path: '/lottie/LOGO.json'
 })
 const loadTick = (into) => {
 LOTTIE.loadAnimation({
@@ -719,9 +727,9 @@ LOTTIE.loadAnimation({
 //
 const setCursor = (focused) => {
 	if (focused) {
-		gsap.to(cursorSub, { borderWidth: 2, backgroundColor: "rgba(0,0,0,0)", duration: 0.25 })
+		GSAP.to(CURSORSUB, { borderWidth: 2, backgroundColor: "rgba(0,0,0,0)", duration: 0.25 })
 	} else {
-		gsap.to(cursorSub, { borderWidth: 10, backgroundColor: "black", duration: 0.25 })
+		GSAP.to(CURSORSUB, { borderWidth: 10, backgroundColor: "black", duration: 0.25 })
 	}
 }
 
@@ -730,14 +738,14 @@ const setCursor = (focused) => {
 //
 const showOverlay = (data) => {
 	if (!Array.isArray(data)) {
-		overlayTitle.innerText = data.title
-		overlayDescription.innerText = data.description
+		OVERLAY_TITLE.innerText = data.title
+		OVERLAY_DESCRIPTION.innerText = data.description
 	} else {
-		overlayTitle.innerText = data[0]
-		overlayDescription.innerText = data[1]
+		OVERLAY_TITLE.innerText = data[0]
+		OVERLAY_DESCRIPTION.innerText = data[1]
 	}
 	overlay.style['display'] = 'initial'
-	gsap.from(overlayWindow, { height: 0, duration: 0.5, clearProps: mobile ? false : 'all' })
+	GSAP.from(overlayWindow, { height: 0, duration: 0.5, clearProps: mobile ? false : 'all' })
 	distract = true
 }
 const hideOverlay = (quiet) => {
@@ -750,10 +758,10 @@ const hideOverlay = (quiet) => {
 }
 const showAllExhibitsOverlay = () => {
 	allExhibitsOverlay.style['display'] = 'flex'
-	gsap.to(allExhibitsOverlay, { opacity: '100%', duration: 0.5, delay: 1 })
+	GSAP.to(allExhibitsOverlay, { opacity: '100%', duration: 0.5, delay: 1 })
 }
 const hideAllExhibitsOverlay = () => {
-	gsap.to(allExhibitsOverlay, { opacity: '0', duration: 0.5, delay: 0, clearProps: 'all', onComplete: () => {
+	GSAP.to(allExhibitsOverlay, { opacity: '0', duration: 0.5, delay: 0, clearProps: 'all', onComplete: () => {
 		allExhibitsOverlay.style['display'] = 'none'
 	} })
 }
@@ -761,8 +769,8 @@ const populateAllExhibitsOverlay = () => {
 	const template = '<div class="stuff"><div class="data"><img src="%IMG%"><div><h3>MOT — EXHIBIT #%INDEX%</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Перейти</h4></div></div>'
 	let data = ['<div class="close"><h1>Все экспонаты</h1><div class="clickable"><h2 сlass="text-button">X</h2></div></div>']
 	for (let i = 0; i < EXHIBITS.length - 1; i++) {
-		if (EXHIBITS[i].is_artifact) continue
-		let s = template.replace('%IMG%', imageMap[EXHIBITS[i].image])
+		if (EXHIBITS[i].isArtifact) continue
+		let s = template.replace('%IMG%', IMAGEMAP[EXHIBITS[i].image])
 		s = s.replace('%INDEX%', EXHIBITS[i].index)
 		s = s.replace('%TITLE%', EXHIBITS[i].title)
 		s = s.replace('%BTN_INDEX%', i)
@@ -784,13 +792,13 @@ const hideFullOverlay = (force=false) => {
 //
 const setSpinner = (visible) => {
 	if (visible) {
-		initialSpinner.style['opacity'] = '0'
-		initialSpinner.style['display'] = 'initial'
-		gsap.to(initialSpinner, { opacity: 1, duration: 0.25, immediateRender: false })
+		INITIAL_SPINNER.style['opacity'] = '0'
+		INITIAL_SPINNER.style['display'] = 'initial'
+		GSAP.to(INITIAL_SPINNER, { opacity: 1, duration: 0.25, immediateRender: false })
 	} else {
-		initialSpinner.style['opacity'] = '1'
-		gsap.to(initialSpinner, { opacity: 0, duration: 0.25, immediateRender: false, onComplete: () => {
-			initialSpinner.style['display'] = 'none'
+		INITIAL_SPINNER.style['opacity'] = '1'
+		GSAP.to(INITIAL_SPINNER, { opacity: 0, duration: 0.25, immediateRender: false, onComplete: () => {
+			INITIAL_SPINNER.style['display'] = 'none'
 		} })
 	}
 }
@@ -805,14 +813,14 @@ const setExhibitProgressButton = (visible, compact, animate) => {
 			exhibitProgress.style['height'] = 'initial'
 		} else {
 			if (animate) {
-				gsap.to(exhibitProgress, { height: 245, duration: 0.5 })
+				GSAP.to(exhibitProgress, { height: 245, duration: 0.5 })
 			} else {
 				exhibitProgress.style['height'] = '245'
 			}
 		}
 	} else {
 		if (animate) {
-			gsap.to(exhibitProgress, { height: 188, duration: 0.5 })
+			GSAP.to(exhibitProgress, { height: 188, duration: 0.5 })
 		} else {
 			exhibitProgress.style['height'] = '188'
 		}
@@ -822,15 +830,15 @@ const setExhibitProgressButton = (visible, compact, animate) => {
 //
 // Three & Scenes
 //
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(75, SIZES.width / SIZES.height, 0.1, 100)
 const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({
-	canvas: canvas,
+	CANVAS: CANVAS,
 	antialias: true
 })
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
-renderer.setSize(sizes.width, sizes.height)
+renderer.setSize(SIZES.width, SIZES.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 let controls
 
@@ -842,10 +850,10 @@ const prepareScene = (exhibit=currentExhibit) => {
 }
 const destroyScene = (advance, hideLogo=false) => {
 	distract = true
-	exLink.style['pointer-events'] = 'none'
-	gsap.to(footer, { height: '100%', duration: 1 })
-	if (hideLogo) gsap.to(logo, { opacity: '0', duration: 0.5 })
-	gsap.to(menu, { bottom: -20, duration: 0.5 })
+	LOGO_LINK.style['pointer-events'] = 'none'
+	GSAP.to(FOOTER, { height: '100%', duration: 1 })
+	if (hideLogo) GSAP.to(LOGO, { opacity: '0', duration: 0.5 })
+	GSAP.to(MENU, { bottom: -20, duration: 0.5 })
 	setTimeout(() => {
 		deloadScene()
 		currentOverlayFocus = 0
@@ -857,12 +865,12 @@ const destroyScene = (advance, hideLogo=false) => {
 	}, 1100)
 }
 const finalizeScene = () => {
-	exLink.style['pointer-events'] = 'initial'
+	LOGO_LINK.style['pointer-events'] = 'initial'
 	// TODO:
 	// Wait for cursor movement to suppress initial model jump
-	gsap.to(footer, { height: 60, duration: 1, delay: 0.25 })
-	gsap.to(menu, { bottom: 22, duration: 0.5, delay: 0 })
-	if (logo.style['opacity'] == '0') { gsap.to(logo, { opacity: '100%', duration: 1, clearProps: 'all' }) }
+	GSAP.to(FOOTER, { height: 60, duration: 1, delay: 0.25 })
+	GSAP.to(MENU, { bottom: 22, duration: 0.5, delay: 0 })
+	if (LOGO.style['opacity'] == '0') { GSAP.to(LOGO, { opacity: '100%', duration: 1, clearProps: 'all' }) }
 	setSpinner(false)
 	distract = false
 }
@@ -871,30 +879,30 @@ const loadScene = (exhibit) => {
 		osc.start()
 		noise.start()
 	}
-	finished = exhibit.is_artifact ? true : false
-	cursorSub.style['background-color'] = exhibit.is_artifact ? 'white' : 'black'
-	cursorSub.style['border-color'] = exhibit.is_artifact ? 'white' : 'black'
+	finished = exhibit.isArtifact ? true : false
+	CURSORSUB.style['background-color'] = exhibit.isArtifact ? 'white' : 'black'
+	CURSORSUB.style['border-color'] = exhibit.isArtifact ? 'white' : 'black'
 	cornerTextMap.map((item) => {
-		item.style['display'] = exhibit.is_artifact ? 'none' : ''
+		item.style['display'] = exhibit.isArtifact ? 'none' : ''
 	})
 	cornerTextLU.innerText = `MOT — EXHIBIT #${exhibit.index}`
 	cornerTextLD.innerText = mobile ? '' : `SESSION #${cookies.sessionID}\n192.168.31.232`
 	cornerTextRU.innerText = mobile ? '' : 'MUSEUM OF TIME\nVIRTUAL TOUR' 
-	cornerTextRD.innerText = mobile ? '' : `${(new Date()).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n Year 21${year}`
+	cornerTextRD.innerText = mobile ? '' : `${(new Date()).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n Year 21${YEAR}`
 	exhibitTitle.innerText = exhibit.title
-	exhibitTitle.style['color'] = exhibit.is_artifact ? 'white' : 'black'
+	exhibitTitle.style['color'] = exhibit.isArtifact ? 'white' : 'black'
 	exhibitDescriptionText.innerText = exhibit.description
-	exhibitProgressTitle.innerText = exhibit.is_artifact ? 'Разблокирован артефакт' : 'Осмотрите экспонат'
+	exhibitProgressTitle.innerText = exhibit.isArtifact ? 'Разблокирован артефакт' : 'Осмотрите экспонат'
 	exhibitProgressSubtitleMap.map((item) => {
-		item.innerText = exhibit.is_artifact ? '' : '???'
+		item.innerText = exhibit.isArtifact ? '' : '???'
 	})
 	exhibitProgressSubtitleTickMap.map((item) => {
 		item.innerHTML = ''
-		item.style['height'] = exhibit.is_artifact ? 'initial' : ''
+		item.style['height'] = exhibit.isArtifact ? 'initial' : ''
 	})
 	exhibitProgressSubtitleTickH.innerHTML = ''
-	setExhibitProgressButton(exhibit.is_artifact, exhibit.is_artifact, false)
-	exhibitProgressSubtitleSpinner.style['display'] = exhibit.is_artifact ? 'none' : ''
+	setExhibitProgressButton(exhibit.isArtifact, exhibit.isArtifact, false)
+	exhibitProgressSubtitleSpinner.style['display'] = exhibit.isArtifact ? 'none' : ''
 
 	if (mobile) {
 		controls = new OrbitControls(camera, renderer.domElement)
@@ -912,7 +920,7 @@ const loadScene = (exhibit) => {
 	camera.position.set(0, 0, exhibit.camera.zPosition)
 	scene.add(camera)
 
-	scene.background = new THREE.Color(exhibit.is_artifact ? 0x171717 : 0xdbd7d2)
+	scene.background = new THREE.Color(exhibit.isArtifact ? 0x171717 : 0xdbd7d2)
 
 	const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, exhibit.camera.lightIntensity + 0.6)
 	hemiLight.position.set(0, 200, 0)
@@ -1009,7 +1017,7 @@ const playLogoSequence = (reverse=false) => {
 //
 const threeTick = () => {
 	if (threeLoaded) {
-		const elapsedTime = clock.getElapsedTime()
+		const elapsedTime = CLOCK.getElapsedTime()
 		TPF = Math.round((elapsedTime - last) * 100) / 100
 		last = elapsedTime
 
@@ -1019,7 +1027,7 @@ const threeTick = () => {
 			cursor.x.cornerCurrent += (cursor.x.corner - cursor.x.cornerCurrent) * (TPF * 10)
 			cursor.y.cornerCurrent += (cursor.y.corner - cursor.y.cornerCurrent) * (TPF * 10)
 			const t = `translate3d(${cursor.x.cornerCurrent}px,${cursor.y.cornerCurrent}px,0px)`
-			let s = cursorSub.style
+			let s = CURSORSUB.style
 			s['transform'] = t
 			s['webkitTransform'] = t
 			s['mozTransform'] = t
@@ -1034,26 +1042,26 @@ const threeTick = () => {
 
 		renderer.render(scene, camera)
 
-		if (logo.matches(":hover") != logoHover) {
-			if (logoHover) {
+		if (LOGO.matches(":hover") != LOGOHover) {
+			if (LOGOHover) {
 				if (!cookies.mute) {
 					playLogoSequence(true)
 				}
-				logoAnimation.setDirection(-1)
-				logoAnimation.play()
+				LOGOAnimation.setDirection(-1)
+				LOGOAnimation.play()
 			} else {
 				if (!cookies.mute) {
 					playLogoSequence(false)
 				}
-				if (logoAnimationNormalized) {
-					logoAnimation.setDirection(1)
-					logoAnimation.play()
+				if (LOGOAnimationNormalized) {
+					LOGOAnimation.setDirection(1)
+					LOGOAnimation.play()
 				} else {
-					logoAnimation.playSegments([9, 21], true)
-					logoAnimationNormalized = true
+					LOGOAnimation.playSegments([9, 21], true)
+					LOGOAnimationNormalized = true
 				}
 			}
-			logoHover = !logoHover
+			LOGOHover = !LOGOHover
 		}
 	}
 	window.requestAnimationFrame(threeTick)
@@ -1073,11 +1081,11 @@ const flow = (rewind=false) => {
 const step1 = () => {
 	startupPlayer.start()
 	let strings = [
-		'[ ~ ] initializing...^1000\n`[ * ] success`^500\n[ ~ ] configuring client...^1000\n`[ ! ] error >>>`\n`    ]> hardware too old`\n`    ]> will use bridge`\n`    ]> `^800',
+		'[ ~ ] initializing...^1000\n`[ * ] success`^500\n[ ~ ] configuring CLIENT...^1000\n`[ ! ] error >>>`\n`    ]> hardware too old`\n`    ]> will use bridge`\n`    ]> `^800',
 		'',
-		'[ ~ ] preparing bridge...^1000\n`[ * ] success {{{`\n`    ]{ protocol: ( XXI century internet <=> uninet© )`\n`    ]{ client: ( ' + client + ' )`\n`    ]{ session: ( ' + cookies.sessionID + '` )\n[\n[\n[\n[\n[ ~ ] launching...^1000\n`[ * ] success`'
+		'[ ~ ] preparing bridge...^1000\n`[ * ] success {{{`\n`    ]{ protocol: ( XXI century internet <=> uninet© )`\n`    ]{ CLIENT: ( ' + CLIENT + ' )`\n`    ]{ session: ( ' + cookies.sessionID + '` )\n[\n[\n[\n[\n[ ~ ] launching...^1000\n`[ * ] success`'
 	]
-	let typed = new Typed(termText, {
+	let typed = new TYPED(TERM_TEXT, {
 		strings,
 		typeSpeed: 10,
 		startDelay: 1000,
@@ -1085,18 +1093,18 @@ const step1 = () => {
 	});
 }
 const step2 = () => {
-	termText.innerHTML = ''
-	termText.style['top'] = '50%'
-	termText.style['text-align'] = 'center'
+	TERM_TEXT.innerHTML = ''
+	TERM_TEXT.style['top'] = '50%'
+	TERM_TEXT.style['text-align'] = 'center'
 	let strings = [
-		`21${year} год.^2000`,
+		`21${YEAR} год.^2000`,
 		'Человечество давно научилось управлять временем.^2000',
 		'Скука, нетерпение, очереди и пробки, ностальгия и тоска\nостались в прошлом.^2000',
 		'Музей времени — последнее напоминание о том, какой мучительной\nбыла жизнь до изобретения этой технологии.^2000',
 		'Музей времени.^1000\nСокращенно — МУВР.^1000\nДобро пожаловать.^2000',
 		''
 	]
-	let typed = new Typed(termText, {
+	let typed = new TYPED(TERM_TEXT, {
 		strings,
 		typeSpeed: 20,
 		startDelay: 1000,
@@ -1132,8 +1140,8 @@ const step2 = () => {
 }
 const step3 = () => {
 	ended = false
-	termText.innerHTML = ''
-	logoAnimation.playSegments([0, 9], true)
+	TERM_TEXT.innerHTML = ''
+	LOGOAnimation.playSegments([0, 9], true)
 	// TODO:
 	// ext func
 	if (!cookies.mute) {
