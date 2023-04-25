@@ -72,26 +72,26 @@ const EXHIBITS = [
 	new Exhibit (
 		false,
 		'2803', 
-		'Первый прорыв', 
-		'Эти древние цифровые часы с радио — объект многолетних лабораторных тестов. Именно на них впервые получилось удачно провести эксперимент по изменению течения времени.', 
+		'First breakthrough', 
+		'This ancient digital clock with radio is the object of many years of laboratory tests. It was on them that for the first time it turned out to successfully conduct an experiment on changing the flow of time.', 
 		'p5',
 		'/3d/Clock_v0.fbx', 
 		[
 			new Poi (
-				'Аналоговые кнопки', 
-				'Для того, чтобы пользоваться этим предметом, людям приходилось физически вдавливать выступающие части корпуса — кнопки — внутрь устройства. в 2133 году представить такое трудно.',
+				'Analog buttons', 
+				'In order to use this item, people had to physically push the protruding parts of the case — buttons — inside the device. in 2133, it is difficult to imagine such a thing.',
 				0.074,
 				-0.008,
 			),
 			new Poi (
-				'Погасший дисплей', 
-				'Когда-то здесь отображались шесть цифр — они представляли текущее время в часах, минутах и секундах. Когда был проведен первый успешный опыт, время в тестовой камере удалось замедлить, и секунды стали идти медленнее.',
+				'Blank display', 
+				'Once there were six digits displayed here — they represented the current time in hours, minutes and seconds. When the first successful experiment was conducted, the time in the test chamber was slowed down, and the seconds began to go slower.',
 				0.057,
 				-0.194,
 			),
 			new Poi (
-				'Радиопередатчик', 
-				'Для того, чтобы коммуницировать с устройством из центра управления, ученые приделали к нему радиопередатчик, с помощью которого с точностью до миллисекунды синхронизировалось время.',
+				'Transmitter', 
+				'In order to communicate with the device from the control center, scientists attached a radio transmitter to it, with the help of which time was synchronized to the millisecond.',
 				-0.302,
 				-0.220,
 			),
@@ -111,8 +111,8 @@ const EXHIBITS = [
 	new Exhibit (
 		true,
 		'null', 
-		'Прототип A/3841-M', 
-		'Этот занимающий два этажа прибор — первое, что сумело подчинить течение времени. В тестовой камере с часами-радио устройство, получающее питание от собственного ядерного реактора, смогло замедлить время ровно в полтора раза.', 
+		'Prototype A/3841-M', 
+		'This device, which occupies two floors, is the first thing that has managed to subdue the flow of time. In a test chamber with a radio clock, a device powered by its own nuclear reactor was able to slow down time by exactly one and a half times.', 
 		null,
 		'/3d/Reactor_v0.fbx', 
 		[],
@@ -131,26 +131,26 @@ const EXHIBITS = [
 	new Exhibit (
 		false,
 		'8541', 
-		'Ожидатель', 
-		'“Ожидатель” представляет собой репродукцию знаменитой скульптуры родена “мыслитель”, созданную около ста лет назад. это образ человека, утомленного ожиданием — типичное зрелище для XXI века.', 
+		'Awaiter', 
+		'“The Awaiter” is a reproduction of Rodin\'s famous sculpture “the thinker”, created about a hundred years ago. this is the image of a man tired of waiting — a typical sight for the XXI century.', 
 		'p1',
 		'/3d/Thinker_v9.fbx', 
 		[
 			new Poi (
-				'Наручные часы Brietling', 
-				'В XXI веке часы часто являлись предметами роскоши: для того, чтобы следить за временем, состоятельные люди были готовы платить большие деньги',
+				'Brietling watch', 
+				'In the XXI century, watches were often luxury items: in order to keep track of time, wealthy people were willing to pay a lot of money.',
 				0.069,
 				-0.116,
 			),
 			new Poi (
-				'Утомленный взгляд',
-				'Глаза человека, проведшего в ожидании не один час. нашим современникам трудно представить это чувство, но летописи описывают его не иначе как невыносимое',
+				'Tired gaze',
+				'The eyes of a man who has spent more than one hour waiting. it is difficult for our contemporaries to imagine this feeling, but the chronicles describe it as unbearable.',
 				0.026,
 				0.209
 			),
 			new Poi (
-				'Неудобная поза',
-				'Сидеть длительное время на лавке или твердом стуле — настоящая пытка. За время ожидания человек перепробовал десятки разных поз, и в каждой ему было неудобно',
+				'Uncomfortable pose',
+				'Sitting on a bench or a hard chair for a long time is a real torture. During the waiting time, the person tried dozens of different poses, and in each he was uncomfortable.',
 				0.013,
 				0.063
 			)
@@ -171,7 +171,7 @@ const EXHIBITS = [
 		true,
 		null, 
 		'Skip Model H3000', 
-		'Model H3000 — первое устройство компании, которое начали массово выпускать. Массивная установка, потребляющая огромное количество энергии, стоила как 5 самолетов Boeing 737-800. Именно в аэропортах впервые и появились эти машины, сделав ожидание людей в залах более приятным.', 
+		'Model H3000 is the first device of the company, which began to be mass—produced. The massive installation, which consumes a huge amount of energy, cost as much as five Boeing 737-800 aircraft. It was at airports that these cars first appeared, making waiting for people in the halls more pleasant.', 
 		null,
 		'/3d/Charger_v1.fbx', 
 		[],
@@ -190,26 +190,26 @@ const EXHIBITS = [
 	new Exhibit (
 		false,
 		'1210', 
-		'Автокатастрофа', 
-		'Этот экспонат — один из новых. Он показывает столкновение двух автомобилей — "Аварию". До открытия ускорения времени люди постоянно торопились и нередко погибали в спешке.', 
+		'Car crash', 
+		'This exhibit is one of the new ones. It shows a collision of two cars — an "Accident". Before the discovery of time acceleration, people were constantly in a hurry and often died in a hurry.', 
 		'p3',
 		'/3d/Crash_v1.fbx', 
 		[
 			new Poi (
-				'Смерть водителя', 
-				'Ни одна технология безопасности не спасла: водитель скончался на месте. Приехавшим врачам осталось только констатировать этот факт.',
+				'Death of the driver', 
+				'No safety technology helped: the driver died on the spot. The doctors who arrived only had to state this fact.',
 				0.158,
 				-0.065,
 			),
 			new Poi (
-				'Серьезные повреждения',
-				'Обе машины отправятся на свалку: после таких повреждений они — лишь металлолом.',
+				'Serious damage',
+				'Both cars will go to the landfill: after such damage, they are only scrap metal.',
 				-0.156,
 				-0.221
 			),
 			new Poi (
-				'Высокая скорость',
-				'Задние колеса универсала поднялись в воздух: водитель спешил и превышал. Цена этого решения оказалась для него слишком высокой.',
+				'High speed',
+				'The rear wheels of the station wagon rose into the air: the driver was in a hurry and exceeded. The price of this decision turned out to be ultimate for him.',
 				0.633,
 				-0.212
 			)
@@ -230,7 +230,7 @@ const EXHIBITS = [
 		true,
 		null, 
 		'Skip Model C200', 
-		'Первая модель, которая поступила в розничную продажу и стала доступна людям — Model C200. Несмотря на стоимость, сравнимую с двумя Bentley Continental GT, спрос на прибор зашкаливал, ведь он предоставлял каждому уникальную возможность исказить время. По текущим стандартам С200 был примитивным, позволяя только замедлять время и работая от автомобильного двигателя. Прорывным же была функция автоматического замедления, помогающая водителям избегать аварий.', 
+		'The first model that went on retail sale and became available to people is the Model C200. Despite the cost comparable to two Bentley Continental GT, the demand for the device was off the scale, because it provided everyone with a unique opportunity to distort time. By current standards, the C200 was primitive, allowing only to slow time down and working from a car engine. The breakthrough was the automatic deceleration function, which helped drivers avoid accidents.', 
 		null,
 		'/3d/CarRadio_v1.fbx', 
 		[],
@@ -249,26 +249,26 @@ const EXHIBITS = [
 	new Exhibit (
 		false,
 		'0686', 
-		'Эконом-класс', 
-		'Перед нами ценнейшая древность — кресла самолета эконом-класса. В прошлом люди проводили мучительно долгие часы, сидя в неудобных, жестких сидениях с крошечным пространством для ног. К счастью, эти муки потеряли актуальность много десятилетий назад, и теперь даже трансатлантический перелет занимает не более пяти минут.', 
+		'Economy class', 
+		'Before us is the most valuable antiquity — economy class airplane seats. In the past, people spent excruciatingly long hours sitting in uncomfortable, hard seats with tiny legroom. Fortunately, these torments lost their relevance many decades ago, and now even a transatlantic flight takes no more than five minutes.', 
 		'p2',
 		'/3d/Seats_v1.fbx', 
 		[
 			new Poi (
-				'Неудобный подголовник', 
-				'Крепко уснуть на таком невозможно. Все, что остается — проваливаться в тревожный, минутный сон, не приносящий никакого отдыха.',
+				'Uncomfortable headrest', 
+				'It is impossible to fall asleep soundly on this. All that remains is to fall into an anxious, minute—long sleep that does not bring any rest.',
 				-0.259,
 				0.124,
 			),
 			new Poi (
-				'Нет места для ног',
-				'Храни вас бог, если ваш рост больше 180 сантиметров. Единственный вариант в такой ситуации — размещать ноги в проходе, но в таком случае обязательно следите, чтобы их вам не оторвало тележкой с едой.',
+				'No leg space',
+				'God bless you if your height is more than 180 centimeters. The only option in this situation is to place your feet in the aisle, but in this case, make sure that they won\'t get torn off by a food cart.',
 				0.073,
 				-0.245
 			),
 			new Poi (
-				'Крохотный столик',
-				'Ни полноценно поесть, ни разместить ноутбук на таком не выйдет, так что придется импровизировать.',
+				'Tiny table',
+				'Neither peacefully eat, nor place a laptop on this will work, so you\'ll have to improvise.',
 				-0.410,
 				-0.069
 			)
@@ -289,7 +289,7 @@ const EXHIBITS = [
 		true,
 		null, 
 		'Skip Model M', 
-		'M means Mobile — слоган рекламной кампании из 2028. Лучше и не скажешь: инженерам удалось значительно уменьшить энергопотребление временных контуров, сделав возможным работу устройства от аккумулятора. Именно это устройство наконец позволило людям взять изменение времени с собой, и несмотря на огромные размеры и низкую автономность (Model M мог запускать процесс изменения времени не более 7 раз от одного заряда), оно стало настоящим публичным хитом.', 
+		'M means Mobile is the slogan of the advertising campaign from 2028. You can\'t say better: engineers managed to significantly reduce the power consumption of temporary circuits, making it possible for the device to work from the battery. It was this device that finally allowed people to take the time change with them, and despite its huge size and low autonomy (the Model M could run the time change process no more than 7 times on a single charge), it became a real public hit.', 
 		null,
 		'/3d/Phone_v1.fbx', 
 		[],
@@ -308,26 +308,26 @@ const EXHIBITS = [
 	new Exhibit (
 		false,
 		'9801', 
-		'Журавлик оригами', 
-		'Еще одна реликвия, датированная 2023 годом: напоминание о том, к каким занятиям прибегали люди из прошлого, стараясь развлечь себя в ежедневных ожиданиях. Кроме оригами к таковым можно отнести вязание, сканворды и судоку. Это все, конечно, если под рукой не окажется телефона.', 
+		'Origami Crane', 
+		'Another relic dated 2023: a reminder of what activities people from the past resorted to, trying to entertain themselves in daily expectations. In addition to origami, knitting, crosswords and sudoku can be attributed to these. This is all, of course, if there is no phone at hand.', 
 		'p4',
 		'/3d/Crane_v3.fbx', 
 		[
 			new Poi (
-				'Почтовое извещение', 
-				'Скучая, кто-то обнаружил у себя под рукой типовое почтовое извещение — бумажный документ, сообщающий, что адресата в отделении ожидает посылка.',
+				'Postal notification', 
+				'Bored, someone found a typical postal notice at hand - a paper document informing that a parcel is waiting for the addressee at the branch.',
 				0.214,
 				0.164,
 			),
 			new Poi (
-				'Телефонный номер',
-				'На извещении синей ручкой написан номер телефона — вероятно, получатель написал его, чтобы не забыть. Может быть, складывая журавлика, он ожидал назначенного звонка?',
+				'Telephone number',
+				'The phone number is written on the notification with a blue pen — probably the recipient wrote it so as not to forget. Maybe, folding the crane, he was waiting for the appointed call?',
 				0.005,
 				0.129
 			),
 			new Poi (
-				'Впечатляющая техника',
-				'Эта поделка явно заняла некоторое время: только посмотрите, как мастерски она выполнена.',
+				'Impressive techique',
+				'This craft obviously took some time: just look at how masterfully it is executed.',
 				0.197,
 				0.321
 			)
@@ -348,7 +348,7 @@ const EXHIBITS = [
 		true,
 		null, 
 		'Skip Model A', 
-		'Венец творения — Model A помещается в карман, позволяя где угодно и сколько угодно манипулировать временем. В массовую продажу Model A поступил в 2115 году, и за несколько лет полностью изменил мир.', 
+		'The crown of creation — Model A fits in a pocket, allowing you to manipulate time anywhere and as much as you want. The Model A went on mass sale in 2115, and in a few years completely changed the world.', 
 		null,
 		'/3d/Hand_v1.fbx', 
 		[],
@@ -611,7 +611,7 @@ window.addEventListener('load', () => {
 	}
 	conformMuteButton()
 	setSpinner(false)
-	showFullOverlay('Нажмите на экран, чтобы начать')
+	showFullOverlay('Click on sreen to begin')
 })
 
 const handleButtonClick = (id) => {
@@ -640,7 +640,7 @@ const handleButtonClick = (id) => {
 		conformMuteButton()
 		break
 	case 3:  // help
-		showOverlay(['Что делать', 'МУВР — музей времени. Здесь представлены экспонаты, олицетворяющее ту или иную трудность, с которой сталкивались люди до изобретения технологии изменения времени. За каждым экспонатом стоит свой артефакт — прибор «скип». Чтобы его разблокировать, изучайте экспонат курсором, пока он не изменит свое состояние, после чего нажмите на обнаруженную деталь.'])
+		showOverlay(['What to do', 'The MUVR is a museum of time. There are exhibits that embody one or another difficulty that people faced before the invention of time-changing technology. Each exhibit has its own artifact — the Skip device. To unlock it, study the exhibit with the cursor until it changes its state, then click on the detected part.'])
 		break
 	case 4:  // next exhibit
 	case 5:
@@ -660,7 +660,7 @@ const handleButtonClick = (id) => {
 		if (array_true(currentProgress) && !finished) {
 			finished = true
 			exhibitProgressSubtitleSpinner.style['display'] = 'none'
-			exhibitProgressTitle.innerText = 'Все детали найдены'
+			exhibitProgressTitle.innerText = 'All details found'
 			setExhibitProgressButton(true, false, true)
 			loadTick(exhibitProgressSubtitleTickH)
 		}
@@ -766,8 +766,8 @@ const hideAllExhibitsOverlay = () => {
 	} })
 }
 const populateAllExhibitsOverlay = () => {
-	const template = '<div class="stuff"><div class="data"><img src="%IMG%"><div><h3>MOT — EXHIBIT #%INDEX%</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Перейти</h4></div></div>'
-	let data = ['<div class="close"><h1>Все экспонаты</h1><div class="clickable"><h2 сlass="text-button">X</h2></div></div>']
+	const template = '<div class="stuff"><div class="data"><img src="%IMG%"><div><h3>MOT — EXHIBIT #%INDEX%</h3><h1>%TITLE%</h1></div></div><div id="%BTN_INDEX%" class="button fixed clickable"><h4>Go to</h4></div></div>'
+	let data = ['<div class="close"><h1>All exhibits</h1><div class="clickable"><h2 сlass="text-button">X</h2></div></div>']
 	for (let i = 0; i < EXHIBITS.length - 1; i++) {
 		if (EXHIBITS[i].isArtifact) continue
 		let s = template.replace('%IMG%', IMAGEMAP[EXHIBITS[i].image])
@@ -783,7 +783,7 @@ const showFullOverlay = (withText) => {
 	fullOverlay.style['display'] = 'initial'
 }
 const hideFullOverlay = (force=false) => {
-	fullOverlayTitle.innerText = 'Увеличьте окно'
+	fullOverlayTitle.innerText = 'Screen too small'
 	fullOverlay.style['display'] = force ? 'none' : ''
 }
 
@@ -892,7 +892,7 @@ const loadScene = (exhibit) => {
 	exhibitTitle.innerText = exhibit.title
 	exhibitTitle.style['color'] = exhibit.isArtifact ? 'white' : 'black'
 	exhibitDescriptionText.innerText = exhibit.description
-	exhibitProgressTitle.innerText = exhibit.isArtifact ? 'Разблокирован артефакт' : 'Осмотрите экспонат'
+	exhibitProgressTitle.innerText = exhibit.isArtifact ? 'Artifact unlocked' : 'Inspect the exhibit'
 	exhibitProgressSubtitleMap.map((item) => {
 		item.innerText = exhibit.isArtifact ? '' : '???'
 	})
@@ -980,7 +980,7 @@ const setExhibit = (to, skipCookies=false) => {
 	if (!skipCookies) cookies.progress = to + 1
 }
 const conformMuteButton = () => {
-	buttons[2].innerText = cookies.mute ? 'Вкл. звук' : 'Выкл. звук'
+	buttons[2].innerText = cookies.mute ? 'Sound on' : 'Sound off'
 }
 const playRandomSequence = (times, offsetIncrement=0.1) => {
 	const generateNote = () => {
@@ -1097,11 +1097,11 @@ const step2 = () => {
 	TERM_TEXT.style['top'] = '50%'
 	TERM_TEXT.style['text-align'] = 'center'
 	let strings = [
-		`21${YEAR} год.^2000`,
-		'Человечество давно научилось управлять временем.^2000',
-		'Скука, нетерпение, очереди и пробки, ностальгия и тоска\nостались в прошлом.^2000',
-		'Музей времени — последнее напоминание о том, какой мучительной\nбыла жизнь до изобретения этой технологии.^2000',
-		'Музей времени.^1000\nСокращенно — МУВР.^1000\nДобро пожаловать.^2000',
+		`Year 21${YEAR}^2000`,
+		'Humanity has long learned to manage time.^2000',
+		'Boredom, impatience, queues and traffic jams, nostalgia and longing\nare in the past.^2000',
+		'The Museum of Time is the last reminder of how painful\nlife was before the invention of this technology.^2000',
+		'Museum of Time.^1000\nShort — MUVR.^1000\nWelcome.^2000',
 		''
 	]
 	let typed = new TYPED(TERM_TEXT, {
@@ -1153,5 +1153,5 @@ const step3 = () => {
 }
 const step4 = () => {
 	ended = true
-	showOverlay(['Вот и все', `Ваше путешествие подошло к концу. Полагаю, оно показало вам, каким ужасным была жизнь людей, вынужденных постоянно чего-то ожидать. Но если этот опыт был для вас недостаточно отвратителен, можете повторить экскурсию, перезагрузив страницу или нажав на кнопку.`])
+	showOverlay(['That\'s it', 'Your journey has come to an end. I think it showed you how terrible life was for people who had to constantly expect something. But if this experience was not disgusting enough for you, you can repeat the tour by reloading the page or clicking on the button.'])
 }
