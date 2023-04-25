@@ -611,7 +611,7 @@ window.addEventListener('load', () => {
 	}
 	conformMuteButton()
 	setSpinner(false)
-	showFullOverlay('Click on sreen to begin')
+	showFullOverlay('Click on screen to begin')
 })
 
 const handleButtonClick = (id) => {
@@ -1097,7 +1097,7 @@ const step2 = () => {
 	TERM_TEXT.style['top'] = '50%'
 	TERM_TEXT.style['text-align'] = 'center'
 	let strings = [
-		`Year 21${YEAR}^2000`,
+		`Year 21${YEAR}.^2000`,
 		'Humanity has long learned to manage time.^2000',
 		'Boredom, impatience, queues and traffic jams, nostalgia and longing\nare in the past.^2000',
 		'The Museum of Time is the last reminder of how painful\nlife was before the invention of this technology.^2000',
